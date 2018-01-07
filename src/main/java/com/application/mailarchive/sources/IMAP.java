@@ -35,14 +35,4 @@ public class IMAP extends Protocol {
             throw new UnsupportedProtocolException(protocol);
         }
     }
-
-    @Override
-    public void open() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public void close() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
 }
