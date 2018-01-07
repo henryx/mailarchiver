@@ -17,7 +17,7 @@ import javax.mail.Store;
  *
  * @author Enrico Bianchi <enrico.bianchi@gmail.com>
  */
-public abstract class Protocol implements AutoCloseable {
+public class Protocol implements AutoCloseable {
 
     private int port;
     private String host;
