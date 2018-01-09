@@ -18,21 +18,23 @@ public class IMAP extends Protocol {
         super(protocol);
 
         this.checkProtocol(protocol, this.protocols);
-        switch (protocol) {
-            case "imap":
-                this.setPort(143);
-                break;
-            case "imaps":
-                this.setPort(993);
-                break;
-            default:
-                throw new UnsupportedProtocolException(protocol);
+        if (protocol.contains("imap")) {
+            this.setPort(143);
+        } else {
+            this.setPort(993);
+
         }
     }
 
     public IMAP(String host, String user, String password, String protocol) throws UnsupportedProtocolException {
         super(host, user, password, protocol);
+
         this.checkProtocol(protocol, this.protocols);
+        if (protocol.contains("imap")) {
+            this.setPort(143);
+        } else {
+            this.setPort(993);
+        }
     }
 
     public IMAP(String host, int port, String user, String password, String protocol) throws UnsupportedProtocolException {
