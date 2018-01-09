@@ -102,25 +102,11 @@ public class Protocol implements AutoCloseable {
         this.password = password;
     }
 
-    /**
-     * @param protocol the password to set
-     */
-    public void setProtocol(String protocol) {
-        this.protocol = protocol;
-    }
-
-    /**
-     * @return the protocol
-     */
-    public String getProtocol() {
-        return protocol;
-    }
-
     public void open() throws NoSuchProviderException {
         Properties props = new Properties();
         Session session = Session.getDefaultInstance(props, null);
 
-        this.store = session.getStore(this.getProtocol());
+        this.store = session.getStore(this.protocol);
     }
 
     @Override
