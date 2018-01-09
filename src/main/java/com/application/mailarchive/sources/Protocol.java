@@ -102,6 +102,21 @@ public class Protocol implements AutoCloseable {
         this.password = password;
     }
 
+
+    /**
+     * Check if protocol is supported by children class
+     * @param protocol
+     * @param protocols
+     * @throws UnsupportedProtocolException
+     */
+    protected void checkProtocol(String protocol, String[] protocols) throws UnsupportedProtocolException {
+        for (String valid : protocols) {
+            if (!protocol.contains(valid)) {
+                throw new UnsupportedProtocolException(protocol);
+            }
+        }
+    }
+
     public void open() throws NoSuchProviderException {
         Properties props = new Properties();
         Session session = Session.getDefaultInstance(props, null);
