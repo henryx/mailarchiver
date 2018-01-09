@@ -130,6 +130,17 @@ public class Protocol implements AutoCloseable {
         this.store = session.getStore(this.protocol);
     }
     
+    
+    /**
+     * Open connection to the store
+     * 
+     * @throws MessagingException 
+     */
+    public void connect() throws MessagingException {
+        this.store.connect(this.host, this.port, this.user, this.password);
+    }
+
+    
     @Override
     public void close() throws MessagingException {
         this.store.close();
