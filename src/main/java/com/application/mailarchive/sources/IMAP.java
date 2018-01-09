@@ -8,6 +8,9 @@ package com.application.mailarchive.sources;
 
 import com.application.mailarchive.exceptions.UnsupportedProtocolException;
 
+import javax.mail.Folder;
+import javax.mail.Message;
+
 /**
  * @author Enrico Bianchi <enrico.bianchi@gmail.com>
  */
@@ -41,5 +44,15 @@ public class IMAP extends Protocol {
         super(host, port, user, password, protocol);
 
         this.checkProtocol(protocol, this.protocols);
+    }
+
+    public Folder[] getFolders(String folder) {
+        // TODO: implement method
+        throw new java.lang.UnsupportedOperationException("Not supported yet.");
+    }
+
+    public Message fetchMessage(Folder folder, int id) {
+        // TODO: implement method
+        throw new java.lang.UnsupportedOperationException("Not supported yet.");
     }
 }
