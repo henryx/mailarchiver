@@ -107,6 +107,13 @@ public class Protocol implements AutoCloseable {
     public void setPassword(String password) {
         this.password = password;
     }
+    
+    /**
+     * @return the store
+     */
+    public Store getStore() {
+        return this.store;
+    }
 
     /**
      * Check if protocol is supported by children class
@@ -142,7 +149,7 @@ public class Protocol implements AutoCloseable {
      * @throws MessagingException 
      */
     public void connect() throws MessagingException {
-        this.store.connect(this.host, this.port, this.user, this.password);
+        this.getStore().connect(this.host, this.port, this.user, this.password);
     }
 
     /**
@@ -152,6 +159,6 @@ public class Protocol implements AutoCloseable {
      */
     @Override
     public void close() throws MessagingException {
-        this.store.close();
+        this.getStore().close();
     }
 }
