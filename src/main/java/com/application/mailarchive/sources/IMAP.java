@@ -9,14 +9,15 @@ package com.application.mailarchive.sources;
 import com.application.mailarchive.exceptions.UnsupportedProtocolException;
 
 /**
- *
  * @author Enrico Bianchi <enrico.bianchi@gmail.com>
  */
 public class IMAP extends Protocol {
+    private String[] protocols = new String[]{"imap", "imaps"};
 
     public IMAP(String protocol) throws UnsupportedProtocolException {
         super(protocol);
 
+        this.checkProtocol(protocol, this.protocols);
         switch (protocol) {
             case "imap":
                 this.setPort(143);
@@ -31,17 +32,12 @@ public class IMAP extends Protocol {
 
     public IMAP(String host, String user, String password, String protocol) throws UnsupportedProtocolException {
         super(host, user, password, protocol);
-
-        if (!protocol.equals("imap") || protocol.equals("imaps")) {
-            throw new UnsupportedProtocolException(protocol);
-        }
+        this.checkProtocol(protocol, this.protocols);
     }
 
     public IMAP(String host, int port, String user, String password, String protocol) throws UnsupportedProtocolException {
         super(host, port, user, password, protocol);
 
-        if (!protocol.equals("imap") || protocol.equals("imaps")) {
-            throw new UnsupportedProtocolException(protocol);
-        }
+        this.checkProtocol(protocol, this.protocols);
     }
 }
