@@ -34,6 +34,7 @@ public class Protocol implements AutoCloseable {
         this.host = host;
         this.user = user;
         this.password = password;
+        this.protocol = protocol;
     }
 
     public Protocol(String host, int port, String user, String password, String protocol) throws UnsupportedProtocolException {
@@ -41,6 +42,7 @@ public class Protocol implements AutoCloseable {
         this.port = port;
         this.user = user;
         this.password = password;
+        this.protocol = protocol;
     }
 
     /**
