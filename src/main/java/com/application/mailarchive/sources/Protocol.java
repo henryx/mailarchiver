@@ -7,6 +7,7 @@
 package com.application.mailarchive.sources;
 
 import com.application.mailarchive.exceptions.UnsupportedProtocolException;
+
 import java.util.Properties;
 import javax.mail.MessagingException;
 import javax.mail.NoSuchProviderException;
@@ -14,7 +15,6 @@ import javax.mail.Session;
 import javax.mail.Store;
 
 /**
- *
  * @author Enrico Bianchi <enrico.bianchi@gmail.com>
  */
 public class Protocol implements AutoCloseable {
@@ -27,7 +27,8 @@ public class Protocol implements AutoCloseable {
 
     private Store store;
 
-    public Protocol() {
+    public Protocol(String protocol) throws UnsupportedProtocolException {
+        this.protocol = protocol;
     }
 
     public Protocol(String host, String user, String password, String protocol) throws UnsupportedProtocolException {
