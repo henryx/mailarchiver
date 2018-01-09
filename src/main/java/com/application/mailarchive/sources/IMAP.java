@@ -10,6 +10,7 @@ import com.application.mailarchive.exceptions.UnsupportedProtocolException;
 
 import javax.mail.Folder;
 import javax.mail.Message;
+import javax.mail.MessagingException;
 import javax.mail.NoSuchProviderException;
 
 /**
@@ -48,9 +49,11 @@ public class IMAP extends Protocol {
         this.checkProtocol(protocol, this.protocols);
     }
 
-    public Folder[] getFolders(String folder) {
-        // TODO: implement method
-        throw new java.lang.UnsupportedOperationException("Not supported yet.");
+    public Folder[] getFolders(String folder) throws MessagingException {
+        Folder root;
+        
+        root = this.getStore().getFolder(folder);
+        return root.list();
     }
 
     public Message fetchMessage(Folder folder, int id) {
