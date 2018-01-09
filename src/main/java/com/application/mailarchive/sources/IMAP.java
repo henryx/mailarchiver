@@ -10,14 +10,16 @@ import com.application.mailarchive.exceptions.UnsupportedProtocolException;
 
 import javax.mail.Folder;
 import javax.mail.Message;
+import javax.mail.NoSuchProviderException;
 
 /**
  * @author Enrico Bianchi <enrico.bianchi@gmail.com>
  */
 public class IMAP extends Protocol {
+
     private String[] protocols = new String[]{"imap", "imaps"};
 
-    public IMAP(String protocol) throws UnsupportedProtocolException {
+    public IMAP(String protocol) throws UnsupportedProtocolException, NoSuchProviderException {
         super(protocol);
 
         this.checkProtocol(protocol, this.protocols);
@@ -29,7 +31,7 @@ public class IMAP extends Protocol {
         }
     }
 
-    public IMAP(String host, String user, String password, String protocol) throws UnsupportedProtocolException {
+    public IMAP(String host, String user, String password, String protocol) throws UnsupportedProtocolException, NoSuchProviderException {
         super(host, user, password, protocol);
 
         this.checkProtocol(protocol, this.protocols);
@@ -40,7 +42,7 @@ public class IMAP extends Protocol {
         }
     }
 
-    public IMAP(String host, int port, String user, String password, String protocol) throws UnsupportedProtocolException {
+    public IMAP(String host, int port, String user, String password, String protocol) throws UnsupportedProtocolException, NoSuchProviderException {
         super(host, port, user, password, protocol);
 
         this.checkProtocol(protocol, this.protocols);
