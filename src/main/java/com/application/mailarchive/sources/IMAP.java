@@ -49,9 +49,16 @@ public class IMAP extends Protocol {
         this.checkProtocol(protocol, this.protocols);
     }
 
+    public Folder[] getFolders() throws MessagingException {
+        Folder defaultFolder;
+
+        defaultFolder = this.getStore().getDefaultFolder();
+        return defaultFolder.list();
+    }
+
     public Folder[] getFolders(String folder) throws MessagingException {
         Folder root;
-        
+
         root = this.getStore().getFolder(folder);
         return root.list();
     }
