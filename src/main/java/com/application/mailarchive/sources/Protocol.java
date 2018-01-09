@@ -123,6 +123,11 @@ public class Protocol implements AutoCloseable {
         }
     }
 
+    /**
+     * Initialize the store
+     * 
+     * @throws NoSuchProviderException 
+     */
     private void initStore() throws NoSuchProviderException {
         Properties props = new Properties();
         Session session = Session.getDefaultInstance(props, null);
@@ -132,7 +137,7 @@ public class Protocol implements AutoCloseable {
     
     
     /**
-     * Open connection to the store
+     * Open the connection to the store
      * 
      * @throws MessagingException 
      */
@@ -140,7 +145,11 @@ public class Protocol implements AutoCloseable {
         this.store.connect(this.host, this.port, this.user, this.password);
     }
 
-    
+    /**
+     * Close the connection to the store
+     * 
+     * @throws MessagingException 
+     */
     @Override
     public void close() throws MessagingException {
         this.store.close();
