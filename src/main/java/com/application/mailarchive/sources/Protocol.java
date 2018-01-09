@@ -27,23 +27,29 @@ public class Protocol implements AutoCloseable {
 
     private Store store;
 
-    public Protocol(String protocol) throws UnsupportedProtocolException {
+    public Protocol(String protocol) throws UnsupportedProtocolException, NoSuchProviderException {
         this.protocol = protocol;
+        
+        this.initStore();
     }
 
-    public Protocol(String host, String user, String password, String protocol) throws UnsupportedProtocolException {
+    public Protocol(String host, String user, String password, String protocol) throws UnsupportedProtocolException, NoSuchProviderException {
         this.host = host;
         this.user = user;
         this.password = password;
         this.protocol = protocol;
+        
+        this.initStore();
     }
 
-    public Protocol(String host, int port, String user, String password, String protocol) throws UnsupportedProtocolException {
+    public Protocol(String host, int port, String user, String password, String protocol) throws UnsupportedProtocolException, NoSuchProviderException {
         this.host = host;
         this.port = port;
         this.user = user;
         this.password = password;
         this.protocol = protocol;
+        
+        this.initStore();
     }
 
     /**
@@ -102,9 +108,9 @@ public class Protocol implements AutoCloseable {
         this.password = password;
     }
 
-
     /**
      * Check if protocol is supported by children class
+     *
      * @param protocol
      * @param protocols
      * @throws UnsupportedProtocolException
@@ -117,13 +123,13 @@ public class Protocol implements AutoCloseable {
         }
     }
 
-    public void open() throws NoSuchProviderException {
+    private void initStore() throws NoSuchProviderException {
         Properties props = new Properties();
         Session session = Session.getDefaultInstance(props, null);
 
         this.store = session.getStore(this.protocol);
     }
-
+    
     @Override
     public void close() throws MessagingException {
         this.store.close();
