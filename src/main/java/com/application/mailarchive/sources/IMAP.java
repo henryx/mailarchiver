@@ -14,10 +14,19 @@ import com.application.mailarchive.exceptions.UnsupportedProtocolException;
  */
 public class IMAP extends Protocol {
 
-    public IMAP() {
-        super();
+    public IMAP(String protocol) throws UnsupportedProtocolException {
+        super(protocol);
 
-        this.setPort(143);
+        switch (protocol) {
+            case "imap":
+                this.setPort(143);
+                break;
+            case "imaps":
+                this.setPort(993);
+                break;
+            default:
+                throw new UnsupportedProtocolException(protocol);
+        }
     }
 
     public IMAP(String host, String user, String password, String protocol) throws UnsupportedProtocolException {
