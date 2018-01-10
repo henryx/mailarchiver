@@ -1,10 +1,14 @@
 /*
  Copyright (C) 2018 Enrico Bianchi (enrico.bianchi@gmail.com)
- Project       mailarchive
- Description   A mail archive
+ Project       mailarchiver
+ Description   A mail archiver
  License       GPL version 2 (see LICENSE for details)
  */
 package com.application.mailarchive;
+
+import net.sourceforge.argparse4j.ArgumentParsers;
+import net.sourceforge.argparse4j.inf.ArgumentParser;
+import net.sourceforge.argparse4j.inf.Namespace;
 
 /**
  *
@@ -12,15 +16,26 @@ package com.application.mailarchive;
  */
 public class Main {
     
-    public void go() {
-        // TODO: implement method
-        throw new java.lang.UnsupportedOperationException("Not supported yet.");
+    private ArgumentParser initargs() {
+        ArgumentParser parser;
+        
+        parser = ArgumentParsers.newFor("Mailarchiver").build()
+                .defaultHelp(true)
+                .description("A mail archiver");
+        
+        return parser;
+    }
+    
+    public void go(String[] argv) {
+        Namespace args;
+        
+        args = this.initargs().parseArgsOrFail(argv);
     }
     
     public static void main(String[] args) {
         Main m;
         
         m = new Main();
-        m.go();
+        m.go(args);
     }
 }
