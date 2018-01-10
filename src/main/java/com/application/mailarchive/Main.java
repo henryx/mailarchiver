@@ -23,6 +23,10 @@ public class Main {
                 .defaultHelp(true)
                 .description("A mail archiver");
         
+        parser.addArgument("-c", "--cfg")
+                .metavar("<file>")
+                .help("Set the configuration file");
+        
         return parser;
     }
     
