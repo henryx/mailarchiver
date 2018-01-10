@@ -12,8 +12,15 @@ package com.application.mailarchive;
  */
 public class Main {
     
-    public static void main(String[] args) {
-        
+    public void go() {
+        // TODO: implement method
+        throw new java.lang.UnsupportedOperationException("Not supported yet.");
     }
     
+    public static void main(String[] args) {
+        Main m;
+        
+        m = new Main();
+        m.go();
+    }
 }
