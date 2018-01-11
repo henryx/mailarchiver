@@ -25,6 +25,7 @@ public class Main {
         
         parser.addArgument("-c", "--cfg")
                 .metavar("<file>")
+                .required(true)
                 .help("Set the configuration file");
         
         return parser;
