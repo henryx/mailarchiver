@@ -8,10 +8,18 @@ package com.application.mailarchive;
 
 import java.io.FileInputStream;
 import java.io.IOException;
+
+import com.application.mailarchive.exceptions.UnsupportedProtocolException;
+import com.application.mailarchive.operations.Archive;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.mail.MessagingException;
 import net.sourceforge.argparse4j.ArgumentParsers;
 import net.sourceforge.argparse4j.inf.ArgumentParser;
 import net.sourceforge.argparse4j.inf.Namespace;
 import org.ini4j.Wini;
+
+import javax.mail.NoSuchProviderException;
 
 /**
  *
@@ -55,11 +63,21 @@ public class Main {
     }
 
     public void go(String[] argv) {
+        Archive archive;
         Namespace args;
         Wini cfg;
 
         args = this.initargs().parseArgsOrFail(argv);
         cfg = this.setCfg(args.getString("cfg"));
+
+        archive =new Archive();
+        try {
+            archive.execute(cfg);
+        } catch (NoSuchProviderException | UnsupportedProtocolException ex) {
+            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (MessagingException ex) {
+            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     public static void main(String[] args) {
