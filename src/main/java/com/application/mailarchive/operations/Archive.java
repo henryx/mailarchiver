@@ -27,7 +27,7 @@ public class Archive {
             proto.setPassword(section.get("password"));
             proto.setHost(section.get("host"));
             try {
-                proto.setPort(Integer.parseInt(section.get(section, "port")));
+                proto.setPort(Integer.parseInt(section.get("port")));
             } catch (NumberFormatException ex) {
                 throw new NumberFormatException("Invalid port number for IMAP protocol: " + section.get(section, "port"));
             }
