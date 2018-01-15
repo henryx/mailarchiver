@@ -20,20 +20,24 @@ import org.ini4j.Wini;
  */
 public class Archive {
 
-    private void startIMAP(Section section) throws UnsupportedProtocolException, NoSuchProviderException, MessagingException {
+    private void startIMAP(Section section) throws UnsupportedProtocolException, NoSuchProviderException, MessagingException, NumberFormatException {
         try (Protocol proto = new IMAP(section.get("protocol"));) {
 
             proto.setUser(section.get("user"));
             proto.setPassword(section.get("password"));
             proto.setHost(section.get("host"));
-            proto.setPort(Integer.parseInt(section.get(section, "port")));
+            try {
+                proto.setPort(Integer.parseInt(section.get(section, "port")));
+            } catch (NumberFormatException ex) {
+                throw new NumberFormatException("Invalid port number for IMAP protocol: " + section.get(section, "port"));
+            }
 
             proto.connect();
             // TODO: fetch and save messages
         }
     }
 
-    public void execute(Wini cfg) throws NoSuchProviderException, UnsupportedProtocolException, MessagingException {
+    public void execute(Wini cfg) throws NoSuchProviderException, UnsupportedProtocolException, MessagingException, NumberFormatException {
 
         for (String section : cfg.keySet()) {
             if (!(section.equals("general") || section.equals("logging"))) {

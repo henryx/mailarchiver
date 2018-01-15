@@ -75,7 +75,7 @@ public class Main {
             archive.execute(cfg);
         } catch (NoSuchProviderException | UnsupportedProtocolException ex) {
             Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (MessagingException ex) {
+        } catch (NumberFormatException | MessagingException ex) {
             Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
