@@ -6,17 +6,20 @@
  */
 package com.application.mailarchive.store;
 
+import java.sql.Connection;
 import org.ini4j.Wini;
 
 /**
  *
  * @author Enrico Bianchi <enrico.bianchi@gmail.com>
  */
-public class Database {
+public abstract class Database {
 
-    private Wini cfg;
+    protected Wini cfg;
     
     public Database(Wini cfg) {
         this.cfg = cfg;
     }
+    
+    public abstract Connection open();
 }
