@@ -6,7 +6,6 @@
  */
 package com.application.mailarchive.store;
 
-import java.sql.Connection;
 import java.sql.SQLException;
 import org.ini4j.Wini;
 
@@ -22,7 +21,7 @@ public abstract class Database implements AutoCloseable {
         this.cfg = cfg;
     }
     
-    public abstract Connection open() throws SQLException;
+    public abstract void open() throws SQLException;
     
     @Override
     public abstract void close() throws SQLException;
