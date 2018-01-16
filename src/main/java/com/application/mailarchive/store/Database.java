@@ -7,6 +7,7 @@
 package com.application.mailarchive.store;
 
 import java.sql.Connection;
+import java.sql.SQLException;
 import org.ini4j.Wini;
 
 /**
@@ -21,5 +22,5 @@ public abstract class Database {
         this.cfg = cfg;
     }
     
-    public abstract Connection open();
+    public abstract Connection open() throws SQLException;
 }
