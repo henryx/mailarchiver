@@ -14,7 +14,7 @@ import org.ini4j.Wini;
  *
  * @author Enrico Bianchi <enrico.bianchi@gmail.com>
  */
-public abstract class Database {
+public abstract class Database implements AutoCloseable {
 
     protected Wini cfg;
     
@@ -23,4 +23,7 @@ public abstract class Database {
     }
     
     public abstract Connection open() throws SQLException;
+    
+    @Override
+    public abstract void close() throws SQLException;
 }
