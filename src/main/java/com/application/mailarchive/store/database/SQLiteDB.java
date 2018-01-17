@@ -9,7 +9,9 @@ package com.application.mailarchive.store.database;
 import com.application.mailarchive.store.Database;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import org.ini4j.Wini;
 
 /**
@@ -24,6 +26,21 @@ public class SQLiteDB extends Database {
         super(cfg);
     }
 
+    private boolean checkDB() throws SQLException {
+        Integer counted;
+        ResultSet res;
+        String query = "SELECT count(*) FROM sqlite_master";
+
+        try (Statement stmt = this.conn.createStatement();) {
+            res = stmt.executeQuery(query);
+
+            res.next();
+            counted = res.getInt(1);
+        }
+
+        return counted > 0;
+    }
+
     private void initDB() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
@@ -35,7 +52,9 @@ public class SQLiteDB extends Database {
         dbpath = this.cfg.get("general", "database");
 
         this.conn = DriverManager.getConnection("jdbc:sqlite:" + dbpath);
-        this.initDB();
+        if (!this.checkDB()) {
+            this.initDB();
+        }
     }
 
     @Override
