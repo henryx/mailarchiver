@@ -7,9 +7,11 @@
 package com.application.mailarchive.sources;
 
 import com.application.mailarchive.exceptions.UnsupportedProtocolException;
+import java.util.ArrayList;
 
 import javax.mail.Folder;
 import javax.mail.Message;
+import javax.mail.MessagingException;
 import javax.mail.NoSuchProviderException;
 
 /**
@@ -46,6 +48,20 @@ public class IMAP extends Protocol {
         super(host, port, user, password, protocol);
 
         this.checkProtocol(protocol, this.protocols);
+    }
+
+    public ArrayList<Folder> getFolderTree(Folder root) throws MessagingException {
+        ArrayList<Folder> result;
+
+        result = new ArrayList<>();
+        for (Folder folder : root.list()) {
+
+            result.add(folder);
+
+            result.addAll(this.getFolderTree(folder));
+        }
+
+        return result;
     }
 
     public Message fetchMessage(Folder folder, int id) {
