@@ -8,7 +8,6 @@ package com.application.mailarchive.operations;
 
 import com.application.mailarchive.exceptions.UnsupportedProtocolException;
 import com.application.mailarchive.sources.IMAP;
-import com.application.mailarchive.sources.Protocol;
 import javax.mail.MessagingException;
 import javax.mail.NoSuchProviderException;
 import org.ini4j.Profile.Section;
@@ -21,7 +20,8 @@ import org.ini4j.Wini;
 public class Archive {
 
     private void startIMAP(Section section) throws UnsupportedProtocolException, NoSuchProviderException, MessagingException, NumberFormatException {
-        try (Protocol proto = new IMAP(section.get("protocol"));) {
+
+        try (IMAP proto = new IMAP(section.get("protocol"));) {
 
             proto.setUser(section.get("user"));
             proto.setPassword(section.get("password"));
@@ -34,8 +34,8 @@ public class Archive {
 
             proto.connect();
             // TODO: fetch and save messages
+            }
         }
-    }
 
     public void execute(Wini cfg) throws NoSuchProviderException, UnsupportedProtocolException, MessagingException, NumberFormatException {
 
