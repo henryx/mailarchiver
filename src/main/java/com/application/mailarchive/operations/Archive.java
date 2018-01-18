@@ -20,7 +20,7 @@ import org.ini4j.Wini;
  */
 public class Archive {
 
-    private void startIMAP(Section section) throws UnsupportedProtocolException, NoSuchProviderException, MessagingException, NumberFormatException {
+    private void archiveIMAP(Section section) throws UnsupportedProtocolException, NoSuchProviderException, MessagingException, NumberFormatException {
 
         try (IMAP proto = new IMAP(section.get("protocol"));) {
 
@@ -45,7 +45,7 @@ public class Archive {
         for (String section : cfg.keySet()) {
             if (!(section.equals("general") || section.equals("logging"))) {
                 if (cfg.get(section, "protocol").startsWith("imap")) {
-                    this.startIMAP(cfg.get(section));
+                    this.archiveIMAP(cfg.get(section));
                 }
             }
         }
