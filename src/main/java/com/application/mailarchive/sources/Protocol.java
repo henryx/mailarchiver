@@ -9,6 +9,7 @@ package com.application.mailarchive.sources;
 import com.application.mailarchive.exceptions.UnsupportedProtocolException;
 
 import java.util.Properties;
+import javax.mail.Folder;
 import javax.mail.MessagingException;
 import javax.mail.NoSuchProviderException;
 import javax.mail.Session;
@@ -26,10 +27,11 @@ public class Protocol implements AutoCloseable {
     private String protocol;
 
     private Store store;
+    private Folder defaultFolder;
 
     public Protocol(String protocol) throws UnsupportedProtocolException, NoSuchProviderException {
         this.protocol = protocol;
-        
+
         this.initStore();
     }
 
@@ -38,7 +40,7 @@ public class Protocol implements AutoCloseable {
         this.user = user;
         this.password = password;
         this.protocol = protocol;
-        
+
         this.initStore();
     }
 
@@ -48,7 +50,7 @@ public class Protocol implements AutoCloseable {
         this.user = user;
         this.password = password;
         this.protocol = protocol;
-        
+
         this.initStore();
     }
 
@@ -107,12 +109,19 @@ public class Protocol implements AutoCloseable {
     public void setPassword(String password) {
         this.password = password;
     }
-    
+
     /**
      * @return the store
      */
     public Store getStore() {
         return this.store;
+    }
+
+    /**
+     * @return the default folder
+     */
+    public Folder getDefaultFolder() {
+        return this.defaultFolder;
     }
 
     /**
@@ -132,8 +141,8 @@ public class Protocol implements AutoCloseable {
 
     /**
      * Initialize the store
-     * 
-     * @throws NoSuchProviderException 
+     *
+     * @throws NoSuchProviderException
      */
     private void initStore() throws NoSuchProviderException {
         Properties props = new Properties();
@@ -141,21 +150,21 @@ public class Protocol implements AutoCloseable {
 
         this.store = session.getStore(this.protocol);
     }
-    
-    
+
     /**
      * Open the connection to the store
-     * 
-     * @throws MessagingException 
+     *
+     * @throws MessagingException
      */
     public void connect() throws MessagingException {
         this.getStore().connect(this.host, this.port, this.user, this.password);
+        this.defaultFolder = this.getStore().getDefaultFolder();
     }
 
     /**
      * Close the connection to the store
-     * 
-     * @throws MessagingException 
+     *
+     * @throws MessagingException
      */
     @Override
     public void close() throws MessagingException {
