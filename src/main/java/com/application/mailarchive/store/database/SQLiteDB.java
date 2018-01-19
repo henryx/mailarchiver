@@ -20,8 +20,6 @@ import org.ini4j.Wini;
  */
 public class SQLiteDB extends Database {
 
-    private Connection conn;
-
     public SQLiteDB(Wini cfg) {
         super(cfg);
     }
@@ -31,7 +29,7 @@ public class SQLiteDB extends Database {
         ResultSet res;
         String query = "SELECT count(*) FROM sqlite_master";
 
-        try (Statement stmt = this.conn.createStatement();) {
+        try (Statement stmt = this.getConn().createStatement();) {
             res = stmt.executeQuery(query);
 
             res.next();
@@ -49,16 +47,11 @@ public class SQLiteDB extends Database {
     public void open() throws SQLException {
         String dbpath;
 
-        dbpath = this.cfg.get("general", "database");
+        dbpath = this.getCfg().get("general", "database");
 
-        this.conn = DriverManager.getConnection("jdbc:sqlite:" + dbpath);
+        this.setConn(DriverManager.getConnection("jdbc:sqlite:" + dbpath));
         if (!this.checkDB()) {
             this.initDB();
         }
-    }
-
-    @Override
-    public void close() throws SQLException {
-        this.conn.close();
     }
 }
