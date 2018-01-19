@@ -40,7 +40,15 @@ public class SQLiteDB extends Database {
     }
 
     private void initDB() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        String[] tables;
+        
+        tables = new String[]{
+            // TODO: add SQL commands for create table
+        };
+        
+        for (String table : tables) {
+            // TODO: create tables
+        }
     }
 
     @Override
