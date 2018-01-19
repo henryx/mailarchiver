@@ -16,8 +16,8 @@ import org.ini4j.Wini;
  */
 public abstract class Database implements AutoCloseable {
 
-    protected Wini cfg;
     private Connection conn;
+    private Wini cfg;
 
     public Database(Wini cfg) {
         this.cfg = cfg;
@@ -35,6 +35,13 @@ public abstract class Database implements AutoCloseable {
      */
     public void setConn(Connection conn) {
         this.conn = conn;
+    }
+
+    /**
+     * @return the cfg
+     */
+    public Wini getCfg() {
+        return cfg;
     }
 
     public abstract void open() throws SQLException;
