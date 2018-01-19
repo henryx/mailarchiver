@@ -40,5 +40,7 @@ public abstract class Database implements AutoCloseable {
     public abstract void open() throws SQLException;
 
     @Override
-    public abstract void close() throws SQLException;
+    public void close() throws SQLException {
+        this.getConn().close();
+    }
 }
