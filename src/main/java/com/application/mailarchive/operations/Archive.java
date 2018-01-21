@@ -6,6 +6,7 @@
  */
 package com.application.mailarchive.operations;
 
+import com.application.mailarchive.Main;
 import com.application.mailarchive.exceptions.UnsupportedProtocolException;
 import com.application.mailarchive.sources.IMAP;
 import javax.mail.Folder;
@@ -35,6 +36,7 @@ public class Archive {
 
             proto.connect();
             for (Folder folder : proto.getFolderTree(proto.getDefaultFolder())) {
+                Main.logger.debug("Message in folder " + folder.getFullName() + ": " + folder.getMessageCount());
                 // TODO: extract messages from folder and archive
             }
         }
