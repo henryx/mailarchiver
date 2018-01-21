@@ -7,7 +7,6 @@
 package com.application.mailarchive.store.database;
 
 import com.application.mailarchive.store.Database;
-import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -39,15 +38,18 @@ public class SQLiteDB extends Database {
         return counted > 0;
     }
 
-    private void initDB() {
+    private void initDB() throws SQLException {
         String[] tables;
-        
+
         tables = new String[]{
-            // TODO: add SQL commands for create table
+            "CREATE TABLE folders(email, folder)",
+            "CREATE VIRTUAL TABLE messages(email, folder, body)"
         };
-        
-        for (String table : tables) {
-            // TODO: create tables
+
+        try (Statement stmt = this.getConn().createStatement();) {
+            for (String table : tables) {
+                stmt.execute(table);
+            }
         }
     }
 
