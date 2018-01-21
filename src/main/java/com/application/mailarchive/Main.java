@@ -11,8 +11,6 @@ import java.io.IOException;
 
 import com.application.mailarchive.exceptions.UnsupportedProtocolException;
 import com.application.mailarchive.operations.Archive;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.mail.MessagingException;
 import net.sourceforge.argparse4j.ArgumentParsers;
 import net.sourceforge.argparse4j.inf.ArgumentParser;
@@ -20,12 +18,19 @@ import net.sourceforge.argparse4j.inf.Namespace;
 import org.ini4j.Wini;
 
 import javax.mail.NoSuchProviderException;
+import org.apache.log4j.Appender;
+import org.apache.log4j.FileAppender;
+import org.apache.log4j.Level;
+import org.apache.log4j.Logger;
+import org.apache.log4j.PatternLayout;
 
 /**
  *
  * @author Enrico Bianchi <enrico.bianchi@gmail.com>
  */
 public class Main {
+
+    public static Logger logger = org.apache.log4j.Logger.getLogger("Memento");
 
     /**
      * Open the configuration file
@@ -45,6 +50,23 @@ public class Main {
         }
 
         return result;
+    }
+
+    /**
+     * Create log via log4j
+     */
+    private void setLog(Wini cfg) {
+        Appender appender;
+
+        try {
+            appender = new FileAppender(new PatternLayout("%d %-5p %c - %m%n"),
+                    cfg.get("logging", "file"));
+            Main.logger.addAppender(appender);
+            Main.logger.setLevel(Level.toLevel(cfg.get("logging", "level")));
+        } catch (IOException | SecurityException ex) {
+            Logger.getLogger(Main.class.getName()).log(Level.FATAL, null, ex);
+            System.exit(2);
+        }
     }
 
     private ArgumentParser initargs() {
@@ -70,13 +92,13 @@ public class Main {
         args = this.initargs().parseArgsOrFail(argv);
         cfg = this.setCfg(args.getString("cfg"));
 
-        archive =new Archive();
+        archive = new Archive();
         try {
             archive.execute(cfg);
         } catch (NoSuchProviderException | UnsupportedProtocolException ex) {
-            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+            Main.logger.fatal(ex);
         } catch (NumberFormatException | MessagingException ex) {
-            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+            Main.logger.fatal(ex);
         }
     }
 
