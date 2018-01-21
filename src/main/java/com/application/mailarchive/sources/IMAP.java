@@ -50,6 +50,7 @@ public class IMAP extends Protocol {
         this.checkProtocol(protocol, this.protocols);
     }
 
+    @Override
     public ArrayList<Folder> getFolderTree(Folder root) throws MessagingException {
         ArrayList<Folder> result;
 
