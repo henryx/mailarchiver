@@ -7,6 +7,7 @@
 package com.application.mailarchive.sources;
 
 import com.application.mailarchive.exceptions.UnsupportedProtocolException;
+import java.util.ArrayList;
 
 import java.util.Properties;
 import javax.mail.Folder;
@@ -170,4 +171,13 @@ public abstract class Protocol implements AutoCloseable {
     public void close() throws MessagingException {
         this.getStore().close();
     }
+
+    /**
+     * Get the folder tree starting from root
+     *
+     * @param root Root folder to extract tree
+     * @return an ArrayList containing folder tree starting from root
+     * @throws MessagingException
+     */
+    public abstract ArrayList<Folder> getFolderTree(Folder root) throws MessagingException;
 }
