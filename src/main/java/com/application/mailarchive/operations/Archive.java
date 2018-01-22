@@ -9,9 +9,10 @@ package com.application.mailarchive.operations;
 import com.application.mailarchive.Main;
 import com.application.mailarchive.exceptions.UnsupportedProtocolException;
 import com.application.mailarchive.sources.IMAP;
-import java.io.IOException;
+import com.application.mailarchive.store.Database;
+import com.application.mailarchive.store.database.SQLiteDB;
+import java.sql.SQLException;
 import javax.mail.Folder;
-import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.mail.NoSuchProviderException;
 import org.apache.log4j.Level;
@@ -24,7 +25,7 @@ import org.ini4j.Wini;
  */
 public class Archive {
 
-    private void archiveIMAP(Section section) throws UnsupportedProtocolException, NoSuchProviderException, MessagingException, NumberFormatException {
+    private void archiveIMAP(Section section, Database db) throws UnsupportedProtocolException, NoSuchProviderException, MessagingException, NumberFormatException {
 
         try (IMAP proto = new IMAP(section.get("protocol"));) {
 
@@ -50,12 +51,17 @@ public class Archive {
 
     public void execute(Wini cfg) throws NoSuchProviderException, UnsupportedProtocolException, MessagingException, NumberFormatException {
 
-        for (String section : cfg.keySet()) {
-            if (!(section.equals("general") || section.equals("logging"))) {
-                if (cfg.get(section, "protocol").startsWith("imap")) {
-                    this.archiveIMAP(cfg.get(section));
+        try (Database db = new SQLiteDB(cfg);) {
+            db.open();
+            for (String section : cfg.keySet()) {
+                if (!(section.equals("general") || section.equals("logging"))) {
+                    if (cfg.get(section, "protocol").startsWith("imap")) {
+                        this.archiveIMAP(cfg.get(section), db);
+                    }
                 }
             }
+        } catch (SQLException ex) {
+            Main.logger.log(Level.FATAL, null, ex);
         }
     }
 }
