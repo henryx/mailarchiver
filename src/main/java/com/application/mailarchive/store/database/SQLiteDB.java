@@ -46,7 +46,7 @@ public class SQLiteDB extends Database {
         String[] tables;
 
         tables = new String[]{
-            "CREATE TABLE headers(account, folder, subject, msgid)",
+            "CREATE TABLE headers(account, folder, received, msgid)",
             "CREATE VIRTUAL TABLE messages USING FTS5(msgid, body)"
         };
 
