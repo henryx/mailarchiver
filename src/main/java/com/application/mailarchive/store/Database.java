@@ -50,4 +50,6 @@ public abstract class Database implements AutoCloseable {
     public void close() throws SQLException {
         this.getConn().close();
     }
+    
+    public abstract void archive(String data) throws SQLException;
 }
