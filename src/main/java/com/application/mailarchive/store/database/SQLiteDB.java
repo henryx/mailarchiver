@@ -43,7 +43,7 @@ public class SQLiteDB extends Database {
 
         tables = new String[]{
             "CREATE TABLE folders(email, folder)",
-            "CREATE VIRTUAL TABLE messages(email, folder, body)"
+            "CREATE VIRTUAL TABLE messages(email, folder, subect, body)"
         };
 
         try (Statement stmt = this.getConn().createStatement();) {
