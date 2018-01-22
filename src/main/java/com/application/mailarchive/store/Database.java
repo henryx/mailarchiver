@@ -51,6 +51,11 @@ public abstract class Database implements AutoCloseable {
 
     @Override
     public void close() throws SQLException {
+        if (!this.getConn().getAutoCommit()) {
+            // FIXME: check if is needed a rollback instead of a commit
+            this.getConn().commit();
+        }
+        
         this.getConn().close();
     }
     
