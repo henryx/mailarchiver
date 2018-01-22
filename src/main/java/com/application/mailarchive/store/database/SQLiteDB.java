@@ -8,6 +8,7 @@ package com.application.mailarchive.store.database;
 
 import com.application.mailarchive.store.Database;
 import java.io.IOException;
+import java.sql.Date;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -57,6 +58,33 @@ public class SQLiteDB extends Database {
         }
     }
 
+    private void archiveHeaders(String account, String folder, Message data) throws SQLException, MessagingException {
+        String query;
+
+        query = "INSERT INTO headers VALUES(?, ?, ?, ?)";
+
+        try (PreparedStatement pstmt = this.getConn().prepareStatement(query)) {
+            pstmt.setString(1, account);
+            pstmt.setString(2, folder);
+            pstmt.setDate(3, new Date(data.getReceivedDate().getTime()));
+            pstmt.setString(4, data.getHeader("Message-ID")[0]);
+
+            pstmt.executeUpdate();
+        }
+    }
+
+    private void archiveMessage(String msgid, String body) throws SQLException {
+        String query;
+
+        query = "INSERT INTO messages VALUES(?, ?)";
+        try (PreparedStatement pstmt = this.getConn().prepareStatement(query)) {
+            pstmt.setString(1, msgid);
+            pstmt.setString(2, body);
+
+            pstmt.executeUpdate();
+        }
+    }
+
     @Override
     public void open() throws SQLException {
         String dbpath;
@@ -71,16 +99,7 @@ public class SQLiteDB extends Database {
 
     @Override
     public void archive(String account, String folder, Message data) throws SQLException, MessagingException, IOException {
-        String query;
-
-        query = "INSERT INTO messages VALUES(?, ?, ?)";
-
-        try (PreparedStatement pstmt = this.getConn().prepareStatement(query)) {
-            pstmt.setString(1, account);
-            pstmt.setString(2, folder);
-            pstmt.setString(3, data.getContent().toString());
-
-            pstmt.executeUpdate();
-        }
+        this.archiveHeaders(account, folder, data);
+        this.archiveMessage(data.getHeader("Message-ID")[0], data.getContent().toString());
     }
 }
