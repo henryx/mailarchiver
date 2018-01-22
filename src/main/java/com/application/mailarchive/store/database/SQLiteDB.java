@@ -47,6 +47,7 @@ public class SQLiteDB extends Database {
         String[] tables;
 
         tables = new String[]{
+            "PRAGMA journal_mode=WAL",
             "CREATE TABLE headers(account, folder, received, msgid)",
             "CREATE VIRTUAL TABLE messages USING FTS5(msgid, body)"
         };
@@ -92,12 +93,10 @@ public class SQLiteDB extends Database {
         dbpath = this.getCfg().get("general", "database");
 
         this.setConn(DriverManager.getConnection("jdbc:sqlite:" + dbpath));
-        this.getConn().setAutoCommit(false);
-        
         if (!this.checkDB()) {
             this.initDB();
         }
-        this.getConn().commit();
+        this.getConn().setAutoCommit(false);
     }
 
     @Override
