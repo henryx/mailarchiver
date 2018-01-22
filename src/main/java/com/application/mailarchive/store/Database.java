@@ -6,8 +6,11 @@
  */
 package com.application.mailarchive.store;
 
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
+import javax.mail.Message;
+import javax.mail.MessagingException;
 import org.ini4j.Wini;
 
 /**
@@ -51,5 +54,5 @@ public abstract class Database implements AutoCloseable {
         this.getConn().close();
     }
     
-    public abstract void archive(String account, String folder, String data) throws SQLException;
+    public abstract void archive(String account, String folder, Message data) throws SQLException, MessagingException, IOException;
 }

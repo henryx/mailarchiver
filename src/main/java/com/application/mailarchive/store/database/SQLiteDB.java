@@ -7,11 +7,14 @@
 package com.application.mailarchive.store.database;
 
 import com.application.mailarchive.store.Database;
+import java.io.IOException;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import javax.mail.Message;
+import javax.mail.MessagingException;
 import org.ini4j.Wini;
 
 /**
@@ -66,7 +69,7 @@ public class SQLiteDB extends Database {
     }
 
     @Override
-    public void archive(String account, String folder, String data) throws SQLException {
+    public void archive(String account, String folder, Message data) throws SQLException, MessagingException, IOException {
         String query;
 
         query = "INSERT INTO messages VALUES(?, ?, ?)";
@@ -74,7 +77,7 @@ public class SQLiteDB extends Database {
         try (PreparedStatement pstmt = this.getConn().prepareStatement(query)) {
             pstmt.setString(1, account);
             pstmt.setString(2, folder);
-            pstmt.setString(3, data);
+            pstmt.setString(3, data.getContent().toString());
 
             pstmt.executeUpdate();
         }
