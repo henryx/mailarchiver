@@ -43,7 +43,6 @@ public class SQLiteDB extends Database {
         String[] tables;
 
         tables = new String[]{
-            "CREATE TABLE folders(email, folder)",
             "CREATE VIRTUAL TABLE messages(email, folder, subject, body)"
         };
 
