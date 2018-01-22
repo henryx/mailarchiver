@@ -91,6 +91,8 @@ public class Main {
 
         args = this.initargs().parseArgsOrFail(argv);
         cfg = this.setCfg(args.getString("cfg"));
+        this.setLog(cfg);
+        Main.logger.info("Started mail archive process");
 
         archive = new Archive();
         try {
@@ -100,6 +102,8 @@ public class Main {
         } catch (NumberFormatException | MessagingException ex) {
             Main.logger.fatal(ex);
         }
+        
+        Main.logger.info("Ended mail archive process");
     }
 
     public static void main(String[] args) {
