@@ -9,9 +9,12 @@ package com.application.mailarchive.operations;
 import com.application.mailarchive.Main;
 import com.application.mailarchive.exceptions.UnsupportedProtocolException;
 import com.application.mailarchive.sources.IMAP;
+import java.io.IOException;
 import javax.mail.Folder;
+import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.mail.NoSuchProviderException;
+import org.apache.log4j.Level;
 import org.ini4j.Profile.Section;
 import org.ini4j.Wini;
 
@@ -37,7 +40,10 @@ public class Archive {
             proto.connect();
             for (Folder folder : proto.getFolderTree(proto.getDefaultFolder())) {
                 Main.logger.debug("Message in folder " + folder.getFullName() + ": " + folder.getMessageCount());
+
+                folder.open(Folder.READ_ONLY);
                 // TODO: extract messages from folder and archive
+                folder.close();
             }
         }
     }
