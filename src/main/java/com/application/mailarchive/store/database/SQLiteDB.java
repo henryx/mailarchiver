@@ -64,4 +64,9 @@ public class SQLiteDB extends Database {
             this.initDB();
         }
     }
+
+    @Override
+    public void archive(String account, String folder, String data) throws SQLException {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
 }
