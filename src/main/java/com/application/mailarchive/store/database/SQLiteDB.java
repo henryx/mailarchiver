@@ -92,9 +92,12 @@ public class SQLiteDB extends Database {
         dbpath = this.getCfg().get("general", "database");
 
         this.setConn(DriverManager.getConnection("jdbc:sqlite:" + dbpath));
+        this.getConn().setAutoCommit(false);
+        
         if (!this.checkDB()) {
             this.initDB();
         }
+        this.getConn().commit();
     }
 
     @Override
