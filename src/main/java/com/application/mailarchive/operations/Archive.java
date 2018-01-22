@@ -45,12 +45,13 @@ public class Archive {
                 Main.logger.debug("Message in folder " + folder.getFullName() + ": " + folder.getMessageCount());
 
                 folder.open(Folder.READ_ONLY);
-                for (Message message : folder.getMessages()) {
-                    try {
+                try {
+                    for (Message message : folder.getMessages()) {
                         db.archive(section.getName(), folder.getFullName(), message);
-                    } catch (MessagingException | IOException | SQLException ex) {
-                        Main.logger.log(Level.ERROR, ex);
                     }
+                    db.getConn().commit();
+                } catch (MessagingException | IOException | SQLException ex) {
+                    Main.logger.log(Level.ERROR, ex);
                 }
                 folder.close();
             }
