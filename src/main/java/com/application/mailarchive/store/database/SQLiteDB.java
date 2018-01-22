@@ -8,6 +8,7 @@ package com.application.mailarchive.store.database;
 
 import com.application.mailarchive.store.Database;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -67,6 +68,16 @@ public class SQLiteDB extends Database {
 
     @Override
     public void archive(String account, String folder, String data) throws SQLException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        String query;
+
+        query = "INSERT INTO messages VALUES(?, ?, ?)";
+
+        try (PreparedStatement pstmt = this.getConn().prepareStatement(query)) {
+            pstmt.setString(1, account);
+            pstmt.setString(2, folder);
+            pstmt.setString(3, data);
+
+            pstmt.executeUpdate();
+        }
     }
 }
