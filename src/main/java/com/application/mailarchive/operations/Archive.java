@@ -11,8 +11,10 @@ import com.application.mailarchive.exceptions.UnsupportedProtocolException;
 import com.application.mailarchive.sources.IMAP;
 import com.application.mailarchive.store.Database;
 import com.application.mailarchive.store.database.SQLiteDB;
+import java.io.IOException;
 import java.sql.SQLException;
 import javax.mail.Folder;
+import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.mail.NoSuchProviderException;
 import org.apache.log4j.Level;
@@ -43,7 +45,13 @@ public class Archive {
                 Main.logger.debug("Message in folder " + folder.getFullName() + ": " + folder.getMessageCount());
 
                 folder.open(Folder.READ_ONLY);
-                // TODO: extract messages from folder and archive
+                for (Message message : folder.getMessages()) {
+                    try {
+                        db.archive(section.getName(), folder.getFullName(), message);
+                    } catch (MessagingException | IOException | SQLException ex) {
+                        Main.logger.log(Level.ERROR, ex);
+                    }
+                }
                 folder.close();
             }
         }
