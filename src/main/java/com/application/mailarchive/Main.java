@@ -6,23 +6,17 @@
  */
 package com.application.mailarchive;
 
-import java.io.FileInputStream;
-import java.io.IOException;
-
 import com.application.mailarchive.exceptions.UnsupportedProtocolException;
 import com.application.mailarchive.operations.Archive;
-import javax.mail.MessagingException;
 import net.sourceforge.argparse4j.ArgumentParsers;
 import net.sourceforge.argparse4j.inf.ArgumentParser;
 import net.sourceforge.argparse4j.inf.Namespace;
+import org.apache.log4j.*;
 import org.ini4j.Wini;
 
-import javax.mail.NoSuchProviderException;
-import org.apache.log4j.Appender;
-import org.apache.log4j.FileAppender;
-import org.apache.log4j.Level;
-import org.apache.log4j.Logger;
-import org.apache.log4j.PatternLayout;
+import javax.mail.MessagingException;
+import java.io.FileInputStream;
+import java.io.IOException;
 
 /**
  *
@@ -97,12 +91,10 @@ public class Main {
         archive = new Archive();
         try {
             archive.execute(cfg);
-        } catch (NoSuchProviderException | UnsupportedProtocolException ex) {
-            Main.logger.fatal(ex);
-        } catch (NumberFormatException | MessagingException ex) {
-            Main.logger.fatal(ex);
+        } catch ( UnsupportedProtocolException | NumberFormatException | MessagingException ex) {
+            Main.logger.fatal(ex.getMessage());
         }
-        
+
         Main.logger.info("Ended mail archive process");
     }
 
