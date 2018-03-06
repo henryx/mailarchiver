@@ -19,7 +19,6 @@ import java.io.FileInputStream;
 import java.io.IOException;
 
 /**
- *
  * @author Enrico Bianchi <enrico.bianchi@gmail.com>
  */
 public class Main {
@@ -82,20 +81,26 @@ public class Main {
         Archive archive;
         Namespace args;
         Wini cfg;
+        int status;
 
+        status = 0;
         args = this.initargs().parseArgsOrFail(argv);
         cfg = this.setCfg(args.getString("cfg"));
         this.setLog(cfg);
-        Main.logger.info("Started mail archive process");
 
         archive = new Archive();
         try {
+            Main.logger.info("Started mail archive process");
+
             archive.execute(cfg);
-        } catch ( UnsupportedProtocolException | NumberFormatException | MessagingException ex) {
+
+            Main.logger.info("Ended mail archive process");
+        } catch (UnsupportedProtocolException | NumberFormatException | MessagingException ex) {
             Main.logger.fatal(ex.getMessage());
+            status = 1;
         }
 
-        Main.logger.info("Ended mail archive process");
+        System.exit(status);
     }
 
     public static void main(String[] args) {
