@@ -30,7 +30,7 @@ import org.apache.log4j.PatternLayout;
  */
 public class Main {
 
-    public static Logger logger = org.apache.log4j.Logger.getLogger("Memento");
+    public static Logger logger = org.apache.log4j.Logger.getLogger("Mail Archiver");
 
     /**
      * Open the configuration file
