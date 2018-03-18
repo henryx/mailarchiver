@@ -7,6 +7,8 @@
 package com.application.mailarchive.sources;
 
 import com.application.mailarchive.exceptions.UnsupportedProtocolException;
+import com.sun.mail.util.MailSSLSocketFactory;
+import java.security.GeneralSecurityException;
 import java.util.ArrayList;
 
 import java.util.Properties;
@@ -30,13 +32,13 @@ public abstract class Protocol implements AutoCloseable {
     private Store store;
     private Folder defaultFolder;
 
-    public Protocol(String protocol) throws UnsupportedProtocolException, NoSuchProviderException {
+    public Protocol(String protocol) throws UnsupportedProtocolException, NoSuchProviderException, GeneralSecurityException {
         this.protocol = protocol;
 
         this.initStore();
     }
 
-    public Protocol(String host, String user, String password, String protocol) throws UnsupportedProtocolException, NoSuchProviderException {
+    public Protocol(String host, String user, String password, String protocol) throws UnsupportedProtocolException, NoSuchProviderException, GeneralSecurityException {
         this.host = host;
         this.user = user;
         this.password = password;
@@ -45,7 +47,7 @@ public abstract class Protocol implements AutoCloseable {
         this.initStore();
     }
 
-    public Protocol(String host, int port, String user, String password, String protocol) throws UnsupportedProtocolException, NoSuchProviderException {
+    public Protocol(String host, int port, String user, String password, String protocol) throws UnsupportedProtocolException, NoSuchProviderException, GeneralSecurityException {
         this.host = host;
         this.port = port;
         this.user = user;
@@ -145,8 +147,16 @@ public abstract class Protocol implements AutoCloseable {
      *
      * @throws NoSuchProviderException
      */
-    private void initStore() throws NoSuchProviderException {
+    private void initStore() throws NoSuchProviderException, GeneralSecurityException {
         Properties props = new Properties();
+
+        if (this.protocol.equals("imaps")) {
+            MailSSLSocketFactory sf = new MailSSLSocketFactory();
+            sf.setTrustAllHosts(true);
+            props.put("mail." + this.protocol + ".ssl.trust", "*");
+            props.put("mail." + this.protocol + ".ssl.socketFactory", sf);
+        }
+
         Session session = Session.getDefaultInstance(props, null);
 
         this.store = session.getStore(this.protocol);

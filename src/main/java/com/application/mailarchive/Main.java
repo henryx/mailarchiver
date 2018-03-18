@@ -17,6 +17,7 @@ import org.ini4j.Wini;
 import javax.mail.MessagingException;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.security.GeneralSecurityException;
 
 /**
  * @author Enrico Bianchi <enrico.bianchi@gmail.com>
@@ -95,7 +96,7 @@ public class Main {
             archive.execute(cfg);
 
             Main.logger.info("Ended mail archive process");
-        } catch (UnsupportedProtocolException | NumberFormatException | MessagingException ex) {
+        } catch (GeneralSecurityException | UnsupportedProtocolException | NumberFormatException | MessagingException ex) {
             Main.logger.fatal(ex.getMessage());
             status = 1;
         }

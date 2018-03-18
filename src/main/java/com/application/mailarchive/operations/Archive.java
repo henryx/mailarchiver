@@ -12,6 +12,7 @@ import com.application.mailarchive.sources.IMAP;
 import com.application.mailarchive.store.Database;
 import com.application.mailarchive.store.database.SQLiteDB;
 import java.io.IOException;
+import java.security.GeneralSecurityException;
 import java.sql.SQLException;
 import javax.mail.Folder;
 import javax.mail.Message;
@@ -27,7 +28,7 @@ import org.ini4j.Wini;
  */
 public class Archive {
 
-    private void archiveIMAP(Section section, Database db) throws UnsupportedProtocolException, NoSuchProviderException, MessagingException, NumberFormatException {
+    private void archiveIMAP(Section section, Database db) throws UnsupportedProtocolException, NoSuchProviderException, MessagingException, NumberFormatException, GeneralSecurityException {
 
         try (IMAP proto = new IMAP(section.get("protocol"));) {
 
@@ -58,7 +59,7 @@ public class Archive {
         }
     }
 
-    public void execute(Wini cfg) throws NoSuchProviderException, UnsupportedProtocolException, MessagingException, NumberFormatException {
+    public void execute(Wini cfg) throws NoSuchProviderException, UnsupportedProtocolException, MessagingException, NumberFormatException, GeneralSecurityException {
 
         try (Database db = new SQLiteDB(cfg);) {
             db.open();
