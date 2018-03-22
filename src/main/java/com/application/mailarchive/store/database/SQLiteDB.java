@@ -67,6 +67,16 @@ public class SQLiteDB extends Database {
         from = "";
         to = "";
 
+        for (Address addr : data.getFrom()) {
+            from = addr.toString() + ", ";
+        }
+        from = from.substring(0, (from.length() - 2));
+
+        for (Address addr : data.getRecipients(Message.RecipientType.TO)) {
+            to = addr.toString() + ", ";
+        }
+        to = to.substring(0, (to.length() - 2));
+
         try (PreparedStatement pstmt = this.getConn().prepareStatement(query)) {
             pstmt.setString(1, account);
             pstmt.setString(2, folder);
