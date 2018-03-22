@@ -26,11 +26,10 @@ public class IMAP extends Protocol {
         super(protocol);
 
         this.checkProtocol(protocol, this.protocols);
-        if (protocol.contains("imap")) {
+        if (protocol.equals("imap")) {
             this.setPort(143);
         } else {
             this.setPort(993);
-
         }
     }
 
