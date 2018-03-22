@@ -14,6 +14,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import javax.mail.Address;
 import javax.mail.Message;
 import javax.mail.MessagingException;
 import org.ini4j.Wini;
@@ -48,7 +49,7 @@ public class SQLiteDB extends Database {
 
         tables = new String[]{
             "PRAGMA journal_mode=WAL",
-            "CREATE TABLE headers(account, folder, received, msgid)",
+            "CREATE TABLE headers(account, folder, received, fromaddr, toaddr, msgid)",
             "CREATE VIRTUAL TABLE messages USING FTS5(msgid, body)"
         };
 
