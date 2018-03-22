@@ -6,6 +6,7 @@
  */
 package com.application.mailarchive.store.database;
 
+import com.application.mailarchive.MailUtils;
 import com.application.mailarchive.store.Database;
 import java.io.IOException;
 import java.sql.Date;
@@ -14,7 +15,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import javax.mail.Address;
 import javax.mail.Message;
 import javax.mail.MessagingException;
 import org.ini4j.Wini;
@@ -64,18 +64,8 @@ public class SQLiteDB extends Database {
         String query, from, to;
 
         query = "INSERT INTO headers VALUES(?, ?, ?, ?, ?, ?)";
-        from = "";
-        to = "";
-
-        for (Address addr : data.getFrom()) {
-            from = addr.toString() + ", ";
-        }
-        from = from.substring(0, (from.length() - 2));
-
-        for (Address addr : data.getRecipients(Message.RecipientType.TO)) {
-            to = addr.toString() + ", ";
-        }
-        to = to.substring(0, (to.length() - 2));
+        from = MailUtils.getRecipient(data.getFrom());
+        to = MailUtils.getRecipient(data.getRecipients(Message.RecipientType.TO));
 
         try (PreparedStatement pstmt = this.getConn().prepareStatement(query)) {
             pstmt.setString(1, account);
