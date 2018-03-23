@@ -107,6 +107,6 @@ public class SQLiteDB extends Database {
     @Override
     public void archive(String account, String folder, Message data) throws SQLException, MessagingException, IOException {
         this.archiveHeaders(account, folder, data);
-        this.archiveMessage(data.getHeader("Message-ID")[0], data.getContent().toString());
+        this.archiveMessage(data.getHeader("Message-ID")[0], MailUtils.getBodyPart(data));
     }
 }
