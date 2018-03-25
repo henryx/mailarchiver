@@ -8,6 +8,7 @@ package com.application.mailarchive.store.database;
 
 import com.application.mailarchive.MailUtils;
 import com.application.mailarchive.store.Database;
+
 import java.io.IOException;
 import java.sql.Date;
 import java.sql.DriverManager;
@@ -17,10 +18,10 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import javax.mail.Message;
 import javax.mail.MessagingException;
+
 import org.ini4j.Wini;
 
 /**
- *
  * @author Enrico Bianchi <enrico.bianchi@gmail.com>
  */
 public class SQLiteDB extends Database {
@@ -48,9 +49,9 @@ public class SQLiteDB extends Database {
         String[] tables;
 
         tables = new String[]{
-            "PRAGMA journal_mode=WAL",
-            "CREATE TABLE headers(account, folder, received, fromaddr, toaddr, msgid)",
-            "CREATE VIRTUAL TABLE messages USING FTS5(msgid, body)"
+                "PRAGMA journal_mode=WAL",
+                "CREATE TABLE headers(account, folder, received, fromaddr, toaddr, msgid)",
+                "CREATE VIRTUAL TABLE messages USING FTS5(msgid, body)"
         };
 
         try (Statement stmt = this.getConn().createStatement();) {
@@ -106,7 +107,12 @@ public class SQLiteDB extends Database {
 
     @Override
     public void archive(String account, String folder, Message data) throws SQLException, MessagingException, IOException {
-        this.archiveHeaders(account, folder, data);
-        this.archiveMessage(data.getHeader("Message-ID")[0], MailUtils.getBodyPart(data));
+        if (!this.headerExists(account, folder, data.getHeader("Message-ID")[0])) {
+            this.archiveHeaders(account, folder, data);
+        }
+
+        if (!this.messageExists(data.getHeader("Message-ID")[0])) {
+            this.archiveMessage(data.getHeader("Message-ID")[0], MailUtils.getBodyPart(data));
+        }
     }
 }
