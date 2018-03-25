@@ -8,13 +8,15 @@ package com.application.mailarchive.store;
 
 import java.io.IOException;
 import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import javax.mail.Message;
 import javax.mail.MessagingException;
+
 import org.ini4j.Wini;
 
 /**
- *
  * @author Enrico Bianchi <enrico.bianchi@gmail.com>
  */
 public abstract class Database implements AutoCloseable {
@@ -55,9 +57,33 @@ public abstract class Database implements AutoCloseable {
             // FIXME: check if is needed a rollback instead of a commit
             this.getConn().commit();
         }
-        
+
         this.getConn().close();
     }
-    
+
     public abstract void archive(String account, String folder, Message data) throws SQLException, MessagingException, IOException;
+
+    public boolean headerExists(String account, String folder, String msgid) throws SQLException {
+        ResultSet res;
+        String query;
+        int count;
+
+        query = "SELECT Count(*) FROM headers WHERE account = ? AND folder = ? AND msgid = ?";
+        try (PreparedStatement pstmt = this.getConn().prepareStatement(query)) {
+            pstmt.setString(1, account);
+            pstmt.setString(2, folder);
+            pstmt.setString(3, msgid);
+
+            res = pstmt.executeQuery();
+            res.next();
+
+            count = res.getInt(1);
+
+            if (count > 0) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+    }
 }
