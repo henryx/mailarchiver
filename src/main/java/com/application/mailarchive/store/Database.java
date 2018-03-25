@@ -86,4 +86,26 @@ public abstract class Database implements AutoCloseable {
             }
         }
     }
+
+    public boolean messageExists(String msgid) throws SQLException {
+        ResultSet res;
+        String query;
+        int count;
+
+        query = "SELECT Count(*) FROM messages WHERE msgid = ?";
+        try (PreparedStatement pstmt = this.getConn().prepareStatement(query)) {
+            pstmt.setString(1, msgid);
+
+            res = pstmt.executeQuery();
+            res.next();
+
+            count = res.getInt(1);
+
+            if (count > 0) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+    }
 }
