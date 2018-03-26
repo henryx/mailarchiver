@@ -7,13 +7,12 @@
 package com.application.mailarchive.sources;
 
 import com.application.mailarchive.exceptions.UnsupportedProtocolException;
-import java.security.GeneralSecurityException;
-import java.util.ArrayList;
 
 import javax.mail.Folder;
-import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.mail.NoSuchProviderException;
+import java.security.GeneralSecurityException;
+import java.util.ArrayList;
 
 /**
  * @author Enrico Bianchi <enrico.bianchi@gmail.com>
