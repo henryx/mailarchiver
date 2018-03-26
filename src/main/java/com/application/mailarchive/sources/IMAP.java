@@ -22,6 +22,13 @@ public class IMAP extends Protocol {
 
     private String[] protocols = new String[]{"imap", "imaps"};
 
+    /**
+     * Initialize the class using default IMAP or IMAPS port
+     * @param protocol set the IMAP protocol used for the operations
+     * @throws UnsupportedProtocolException
+     * @throws NoSuchProviderException
+     * @throws GeneralSecurityException
+     */
     public IMAP(String protocol) throws UnsupportedProtocolException, NoSuchProviderException, GeneralSecurityException {
         super(protocol);
 
@@ -33,6 +40,17 @@ public class IMAP extends Protocol {
         }
     }
 
+    /**
+     * Initialize the class using default IMAP or IMAPS port
+     *
+     * @param host set the IMAP host
+     * @param user set the IMAP user
+     * @param password set the IMAP password
+     * @param protocol set the IMAP protocol used for the operations
+     * @throws UnsupportedProtocolException
+     * @throws NoSuchProviderException
+     * @throws GeneralSecurityException
+     */
     public IMAP(String host, String user, String password, String protocol) throws UnsupportedProtocolException, NoSuchProviderException, GeneralSecurityException {
         super(host, user, password, protocol);
 
@@ -44,6 +62,18 @@ public class IMAP extends Protocol {
         }
     }
 
+    /**
+     * Initialize the class
+     *
+     * @param host set the IMAP host
+     * @param port set tge IMAP port
+     * @param user set the IMAP user
+     * @param password set the IMAP password
+     * @param protocol set the IMAP protocol used for the operations
+     * @throws UnsupportedProtocolException
+     * @throws NoSuchProviderException
+     * @throws GeneralSecurityException
+     */
     public IMAP(String host, int port, String user, String password, String protocol) throws UnsupportedProtocolException, NoSuchProviderException, GeneralSecurityException {
         super(host, port, user, password, protocol);
 
