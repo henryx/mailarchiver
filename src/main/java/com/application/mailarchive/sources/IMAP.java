@@ -94,9 +94,4 @@ public class IMAP extends Protocol {
 
         return result;
     }
-
-    public Message fetchMessage(Folder folder, int id) {
-        // TODO: implement method
-        throw new java.lang.UnsupportedOperationException("Not supported yet.");
-    }
 }
