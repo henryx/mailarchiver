@@ -23,6 +23,7 @@ public class IMAP extends Protocol {
 
     /**
      * Initialize the class using default IMAP or IMAPS port
+     *
      * @param protocol set the IMAP protocol used for the operations
      * @throws UnsupportedProtocolException
      * @throws NoSuchProviderException
@@ -42,8 +43,8 @@ public class IMAP extends Protocol {
     /**
      * Initialize the class using default IMAP or IMAPS port
      *
-     * @param host set the IMAP host
-     * @param user set the IMAP user
+     * @param host     set the IMAP host
+     * @param user     set the IMAP user
      * @param password set the IMAP password
      * @param protocol set the IMAP protocol used for the operations
      * @throws UnsupportedProtocolException
@@ -64,9 +65,9 @@ public class IMAP extends Protocol {
     /**
      * Initialize the class
      *
-     * @param host set the IMAP host
-     * @param port set tge IMAP port
-     * @param user set the IMAP user
+     * @param host     set the IMAP host
+     * @param port     set tge IMAP port
+     * @param user     set the IMAP user
      * @param password set the IMAP password
      * @param protocol set the IMAP protocol used for the operations
      * @throws UnsupportedProtocolException
