@@ -15,6 +15,7 @@ import org.apache.log4j.*;
 import org.ini4j.Wini;
 
 import javax.mail.MessagingException;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.security.GeneralSecurityException;
@@ -66,6 +67,8 @@ public class Main {
     private ArgumentParser initargs() {
         ArgumentParser parser;
 
+        String defaultcfg = System.getProperty("user.home") + File.separator + "mailarchive.cfg";
+
         parser = ArgumentParsers.newFor("Mailarchiver").build()
                 .defaultHelp(true)
                 .description("A mail archiver");
@@ -73,6 +76,7 @@ public class Main {
         parser.addArgument("-c", "--cfg")
                 .metavar("<file>")
                 .required(true)
+                .setDefault(defaultcfg)
                 .help("Set the configuration file");
 
         return parser;
