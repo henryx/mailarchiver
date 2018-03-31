@@ -50,14 +50,13 @@ public class Main {
     /**
      * Create log via log4j
      */
-    private void setLog(Wini cfg) {
+    private void setLog(String file, String level) {
         Appender appender;
 
         try {
-            appender = new FileAppender(new PatternLayout("%d %-5p %c - %m%n"),
-                    cfg.get("logging", "file"));
+            appender = new FileAppender(new PatternLayout("%d %-5p %c - %m%n"), file);
             Main.logger.addAppender(appender);
-            Main.logger.setLevel(Level.toLevel(cfg.get("logging", "level")));
+            Main.logger.setLevel(Level.toLevel(level));
         } catch (IOException | SecurityException ex) {
             Logger.getLogger(Main.class.getName()).log(Level.FATAL, null, ex);
             System.exit(2);
@@ -91,7 +90,8 @@ public class Main {
         status = 0;
         args = this.initargs().parseArgsOrFail(argv);
         cfg = this.setCfg(args.getString("cfg"));
-        this.setLog(cfg);
+        this.setLog(cfg.get("general", "logfile"),
+                cfg.get("general", "loglevel"));
 
         archive = new Archive();
         try {

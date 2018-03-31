@@ -64,7 +64,7 @@ public class Archive {
         try (Database db = new SQLiteDB(cfg);) {
             db.open();
             for (String section : cfg.keySet()) {
-                if (!(section.equals("general") || section.equals("logging"))) {
+                if (!(section.equals("general"))) {
                     if (cfg.get(section, "protocol").startsWith("imap")) {
                         this.archiveIMAP(cfg.get(section), db);
                     }
