@@ -10,6 +10,7 @@ import com.application.mailarchive.Main;
 import com.application.mailarchive.exceptions.UnsupportedProtocolException;
 import com.application.mailarchive.sources.IMAP;
 import com.application.mailarchive.store.Database;
+import com.application.mailarchive.store.Store;
 import com.application.mailarchive.store.database.SQLiteDB;
 import java.io.IOException;
 import java.security.GeneralSecurityException;
@@ -33,7 +34,7 @@ public class Archive {
         this.cfg = cfg;
     }
 
-    private void archiveIMAP(Section section, Database db) throws UnsupportedProtocolException, NoSuchProviderException, MessagingException, NumberFormatException, GeneralSecurityException {
+    private void archiveIMAP(Section section, Store db) throws UnsupportedProtocolException, NoSuchProviderException, MessagingException, NumberFormatException, GeneralSecurityException {
 
         try (IMAP proto = new IMAP(section.get("protocol"));) {
 
@@ -64,7 +65,7 @@ public class Archive {
         }
     }
 
-    private void archive(Database db) throws UnsupportedProtocolException, MessagingException, NoSuchProviderException, NumberFormatException, GeneralSecurityException {
+    private void archive(Store db) throws UnsupportedProtocolException, MessagingException, NoSuchProviderException, NumberFormatException, GeneralSecurityException {
         for (String section : this.cfg.keySet()) {
             if (!(section.equals("general"))) {
                 if (this.cfg.get(section, "protocol").startsWith("imap")) {
