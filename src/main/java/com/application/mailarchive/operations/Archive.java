@@ -65,17 +65,21 @@ public class Archive {
         }
     }
 
+    private void archive(Database db) throws UnsupportedProtocolException, MessagingException, NoSuchProviderException, NumberFormatException, GeneralSecurityException {
+        for (String section : this.cfg.keySet()) {
+            if (!(section.equals("general"))) {
+                if (this.cfg.get(section, "protocol").startsWith("imap")) {
+                    this.archiveIMAP(this.cfg.get(section), db);
+                }
+            }
+        }
+    }
+
     public void execute() throws NoSuchProviderException, UnsupportedProtocolException, MessagingException, NumberFormatException, GeneralSecurityException {
         try (Database db = new SQLiteDB(this.cfg);) {
             db.open();
             if (db.isOpened()) {
-                for (String section : this.cfg.keySet()) {
-                    if (!(section.equals("general"))) {
-                        if (this.cfg.get(section, "protocol").startsWith("imap")) {
-                            this.archiveIMAP(this.cfg.get(section), db);
-                        }
-                    }
-                }
+                this.archive(db);
             } else {
                 Main.logger.fatal("Database connection is not opened");
             }
