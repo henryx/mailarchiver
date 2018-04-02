@@ -60,15 +60,18 @@ public class Archive {
     }
 
     public void execute(Wini cfg) throws NoSuchProviderException, UnsupportedProtocolException, MessagingException, NumberFormatException, GeneralSecurityException {
-
         try (Database db = new SQLiteDB(cfg);) {
             db.open();
-            for (String section : cfg.keySet()) {
-                if (!(section.equals("general"))) {
-                    if (cfg.get(section, "protocol").startsWith("imap")) {
-                        this.archiveIMAP(cfg.get(section), db);
+            if (db.isOpened()) {
+                for (String section : cfg.keySet()) {
+                    if (!(section.equals("general"))) {
+                        if (cfg.get(section, "protocol").startsWith("imap")) {
+                            this.archiveIMAP(cfg.get(section), db);
+                        }
                     }
                 }
+            } else {
+                Main.logger.fatal("Database connection is not opened");
             }
         }
     }
