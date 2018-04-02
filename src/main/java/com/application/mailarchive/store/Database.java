@@ -63,6 +63,15 @@ public abstract class Database implements Store {
     public abstract void open();
 
     @Override
+    public boolean isOpened() {
+        try {
+            return this.conn instanceof Connection && !this.conn.isClosed();
+        } catch (SQLException ex) {
+            return false;
+        }
+    }
+
+    @Override
     public void close() {
         try {
             if (!this.getConn().getAutoCommit()) {
