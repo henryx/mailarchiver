@@ -54,7 +54,12 @@ public class Main {
         Appender appender;
 
         try {
-            appender = new FileAppender(new PatternLayout("%d %-5p %c - %m%n"), file);
+            if (file == null || file.equals("")) {
+                appender = new ConsoleAppender(new PatternLayout("%d %-5p %c - %m%n"));
+            } else {
+                appender = new FileAppender(new PatternLayout("%d %-5p %c - %m%n"), file);
+            }
+
             Main.logger.addAppender(appender);
             Main.logger.setLevel(Level.toLevel(level));
         } catch (IOException | SecurityException ex) {
