@@ -6,6 +6,7 @@
  */
 package com.application.mailarchive.store;
 
+import com.application.mailarchive.Main;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -19,10 +20,10 @@ import org.ini4j.Wini;
 /**
  * @author Enrico Bianchi <enrico.bianchi@gmail.com>
  */
-public abstract class Database implements AutoCloseable {
+public abstract class Database implements Store {
 
     private Connection conn;
-    private final Wini cfg;
+    private Wini cfg;
 
     public Database(Wini cfg) {
         this.cfg = cfg;
@@ -43,27 +44,43 @@ public abstract class Database implements AutoCloseable {
     }
 
     /**
+     * @param cfg the cfg to set
+     */
+    @Override
+    public void setCfg(Wini cfg) {
+        this.cfg = cfg;
+    }
+
+    /**
      * @return the cfg
      */
+    @Override
     public Wini getCfg() {
         return cfg;
     }
 
-    public abstract void open() throws SQLException;
+    @Override
+    public abstract void open();
 
     @Override
-    public void close() throws SQLException {
-        if (!this.getConn().getAutoCommit()) {
-            // FIXME: check if is needed a rollback instead of a commit
-            this.getConn().commit();
-        }
+    public void close() {
+        try {
+            if (!this.getConn().getAutoCommit()) {
+                // FIXME: check if is needed a rollback instead of a commit
+                this.getConn().commit();
+            }
 
-        this.getConn().close();
+            this.getConn().close();
+        } catch (SQLException ex) {
+            Main.logger.debug("Failed to close the database : " + ex.getMessage());
+        }
     }
 
-    public abstract void archive(String account, String folder, Message data) throws SQLException, MessagingException, IOException;
+    @Override
+    public abstract void archive(String account, String folder, Message data) throws MessagingException, IOException;
 
-    public boolean headerExists(String account, String folder, String msgid) throws SQLException {
+    @Override
+    public boolean headerExists(String account, String folder, String msgid) {
         ResultSet res;
         String query;
         int count;
@@ -80,10 +97,14 @@ public abstract class Database implements AutoCloseable {
             count = res.getInt(1);
 
             return count > 0;
+        } catch (SQLException ex) {
+            Main.logger.debug("Failed to check if header exist: " + ex.getMessage());
+            return false;
         }
     }
 
-    public boolean messageExists(String msgid) throws SQLException {
+    @Override
+    public boolean messageExists(String msgid) {
         ResultSet res;
         String query;
         int count;
@@ -98,6 +119,9 @@ public abstract class Database implements AutoCloseable {
             count = res.getInt(1);
 
             return count > 0;
+        } catch (SQLException ex) {
+            Main.logger.debug("Failed to check if message exist: " + ex.getMessage());
+            return false;
         }
     }
 }

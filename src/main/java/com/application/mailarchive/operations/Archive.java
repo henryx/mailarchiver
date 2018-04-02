@@ -70,8 +70,6 @@ public class Archive {
                     }
                 }
             }
-        } catch (SQLException ex) {
-            Main.logger.log(Level.FATAL, null, ex);
         }
     }
 }

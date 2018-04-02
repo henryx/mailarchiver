@@ -7,6 +7,7 @@
 package com.application.mailarchive.store.database;
 
 import com.application.mailarchive.MailUtils;
+import com.application.mailarchive.Main;
 import com.application.mailarchive.store.Database;
 
 import java.io.IOException;
@@ -49,9 +50,9 @@ public class SQLiteDB extends Database {
         String[] tables;
 
         tables = new String[]{
-                "PRAGMA journal_mode=WAL",
-                "CREATE TABLE headers(account, folder, received, fromaddr, toaddr, msgid)",
-                "CREATE VIRTUAL TABLE messages USING FTS5(msgid, body)"
+            "PRAGMA journal_mode=WAL",
+            "CREATE TABLE headers(account, folder, received, fromaddr, toaddr, msgid)",
+            "CREATE VIRTUAL TABLE messages USING FTS5(msgid, body)"
         };
 
         try (Statement stmt = this.getConn().createStatement();) {
@@ -93,26 +94,34 @@ public class SQLiteDB extends Database {
     }
 
     @Override
-    public void open() throws SQLException {
+    public void open() {
         String dbpath;
 
         dbpath = this.getCfg().get("general", "database");
 
-        this.setConn(DriverManager.getConnection("jdbc:sqlite:" + dbpath));
-        if (!this.checkDB()) {
-            this.initDB();
+        try {
+            this.setConn(DriverManager.getConnection("jdbc:sqlite:" + dbpath));
+            if (!this.checkDB()) {
+                this.initDB();
+            }
+            this.getConn().setAutoCommit(false);
+        } catch (SQLException ex) {
+            Main.logger.debug("Failed to open database: " + ex.getMessage());
         }
-        this.getConn().setAutoCommit(false);
     }
 
     @Override
-    public void archive(String account, String folder, Message data) throws SQLException, MessagingException, IOException {
-        if (!this.headerExists(account, folder, data.getHeader("Message-ID")[0])) {
-            this.archiveHeaders(account, folder, data);
-        }
+    public void archive(String account, String folder, Message data) throws MessagingException, IOException {
+        try {
+            if (!this.headerExists(account, folder, data.getHeader("Message-ID")[0])) {
+                this.archiveHeaders(account, folder, data);
+            }
 
-        if (!this.messageExists(data.getHeader("Message-ID")[0])) {
-            this.archiveMessage(data.getHeader("Message-ID")[0], MailUtils.getBodyPart(data));
+            if (!this.messageExists(data.getHeader("Message-ID")[0])) {
+                this.archiveMessage(data.getHeader("Message-ID")[0], MailUtils.getBodyPart(data));
+            }
+        } catch (SQLException ex) {
+            Main.logger.debug("Failed to archive message: " + ex.getMessage());
         }
     }
 }
