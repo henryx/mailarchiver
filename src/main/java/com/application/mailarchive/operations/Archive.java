@@ -13,7 +13,6 @@ import com.application.mailarchive.store.Database;
 import com.application.mailarchive.store.database.SQLiteDB;
 import java.io.IOException;
 import java.security.GeneralSecurityException;
-import java.sql.SQLException;
 import javax.mail.Folder;
 import javax.mail.Message;
 import javax.mail.MessagingException;
@@ -56,8 +55,8 @@ public class Archive {
                     for (Message message : folder.getMessages()) {
                         db.archive(section.getName(), folder.getFullName(), message);
                     }
-                    db.getConn().commit();
-                } catch (MessagingException | IOException | SQLException ex) {
+                    db.commit();
+                } catch (MessagingException | IOException ex) {
                     Main.logger.log(Level.ERROR, ex);
                 }
                 folder.close();

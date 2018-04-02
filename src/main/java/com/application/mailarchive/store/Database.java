@@ -72,6 +72,16 @@ public abstract class Database implements Store {
     }
 
     @Override
+    public boolean commit() {
+        try {
+            this.getConn().commit();
+            return true;
+        } catch (SQLException ex) {
+            return false;
+        }
+    }
+
+    @Override
     public void close() {
         try {
             if (!this.getConn().getAutoCommit()) {
