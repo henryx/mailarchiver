@@ -22,7 +22,7 @@ import org.ini4j.Wini;
 public abstract class Database implements AutoCloseable {
 
     private Connection conn;
-    private Wini cfg;
+    private final Wini cfg;
 
     public Database(Wini cfg) {
         this.cfg = cfg;
@@ -79,11 +79,7 @@ public abstract class Database implements AutoCloseable {
 
             count = res.getInt(1);
 
-            if (count > 0) {
-                return true;
-            } else {
-                return false;
-            }
+            return count > 0;
         }
     }
 
@@ -101,11 +97,7 @@ public abstract class Database implements AutoCloseable {
 
             count = res.getInt(1);
 
-            if (count > 0) {
-                return true;
-            } else {
-                return false;
-            }
+            return count > 0;
         }
     }
 }
