@@ -20,18 +20,20 @@ public class MailUtils {
     public static String getRecipient(Address[] address) {
         String recipient;
         recipient = "";
-
-        for (Address addr : address) {
-            recipient = addr.toString() + ", ";
+        try {
+            for (Address addr : address) {
+                recipient = addr.toString() + ", ";
+            }
+            recipient = recipient.substring(0, (recipient.length() - 2));
+        } catch (NullPointerException ex) {
         }
-        recipient = recipient.substring(0, (recipient.length() - 2));
 
         return recipient;
     }
 
     public static String getBodyPart(Part p) throws MessagingException, IOException {
         // NOTE: This code is not mine, please refer https://javaee.github.io/javamail/FAQ#readattach
-        
+
         if (p.isMimeType("text/*")) {
             String s = (String) p.getContent();
             return s;
