@@ -28,6 +28,12 @@ import org.ini4j.Wini;
  */
 public class Archive {
 
+    private final Wini cfg;
+
+    public Archive(Wini cfg) {
+        this.cfg = cfg;
+    }
+
     private void archiveIMAP(Section section, Database db) throws UnsupportedProtocolException, NoSuchProviderException, MessagingException, NumberFormatException, GeneralSecurityException {
 
         try (IMAP proto = new IMAP(section.get("protocol"));) {
@@ -59,14 +65,14 @@ public class Archive {
         }
     }
 
-    public void execute(Wini cfg) throws NoSuchProviderException, UnsupportedProtocolException, MessagingException, NumberFormatException, GeneralSecurityException {
-        try (Database db = new SQLiteDB(cfg);) {
+    public void execute() throws NoSuchProviderException, UnsupportedProtocolException, MessagingException, NumberFormatException, GeneralSecurityException {
+        try (Database db = new SQLiteDB(this.cfg);) {
             db.open();
             if (db.isOpened()) {
-                for (String section : cfg.keySet()) {
+                for (String section : this.cfg.keySet()) {
                     if (!(section.equals("general"))) {
-                        if (cfg.get(section, "protocol").startsWith("imap")) {
-                            this.archiveIMAP(cfg.get(section), db);
+                        if (this.cfg.get(section, "protocol").startsWith("imap")) {
+                            this.archiveIMAP(this.cfg.get(section), db);
                         }
                     }
                 }

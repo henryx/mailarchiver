@@ -98,11 +98,11 @@ public class Main {
         this.setLog(cfg.get("general", "logfile"),
                 cfg.get("general", "loglevel"));
 
-        archive = new Archive();
+        archive = new Archive(cfg);
         try {
             Main.logger.info("Started mail archive process");
 
-            archive.execute(cfg);
+            archive.execute();
 
             Main.logger.info("Ended mail archive process");
         } catch (GeneralSecurityException | UnsupportedProtocolException | NumberFormatException | MessagingException ex) {
