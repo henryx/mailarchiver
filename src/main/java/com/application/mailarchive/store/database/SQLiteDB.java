@@ -11,12 +11,12 @@ import com.application.mailarchive.Main;
 import com.application.mailarchive.store.Database;
 
 import java.io.IOException;
-import java.sql.Date;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.Timestamp;
 import javax.mail.Message;
 import javax.mail.MessagingException;
 
@@ -63,17 +63,17 @@ public class SQLiteDB extends Database {
 
     private void archiveHeaders(String account, String folder, String msgid, Message data) throws SQLException, MessagingException {
         String query, from, to;
-        Date received;
+        Timestamp received;
 
         query = "INSERT INTO headers VALUES(?, ?, ?, ?, ?, ?)";
         from = MailUtils.getRecipient(data.getFrom());
         to = MailUtils.getRecipient(data.getRecipients(Message.RecipientType.TO));
-        received = new Date(data.getReceivedDate().getTime());
+        received = new Timestamp(data.getReceivedDate().getTime());
 
         try (PreparedStatement pstmt = this.getConn().prepareStatement(query)) {
             pstmt.setString(1, account);
             pstmt.setString(2, folder);
-            pstmt.setDate(3, received);
+            pstmt.setTimestamp(3, received);
             pstmt.setString(4, from);
             pstmt.setString(5, to);
             pstmt.setString(6, msgid);
