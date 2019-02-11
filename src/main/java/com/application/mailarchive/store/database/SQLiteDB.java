@@ -63,19 +63,22 @@ public class SQLiteDB extends Database {
     }
 
     private void archiveHeaders(String account, String folder, Message data) throws SQLException, MessagingException {
-        String query, from, to;
-
+        String query, from, to, msgid;
+        Date received;
+        
         query = "INSERT INTO headers VALUES(?, ?, ?, ?, ?, ?)";
         from = MailUtils.getRecipient(data.getFrom());
         to = MailUtils.getRecipient(data.getRecipients(Message.RecipientType.TO));
+        received = new Date(data.getReceivedDate().getTime());
+        msgid = data.getHeader("Message-ID")[0];
 
         try (PreparedStatement pstmt = this.getConn().prepareStatement(query)) {
             pstmt.setString(1, account);
             pstmt.setString(2, folder);
-            pstmt.setDate(3, new Date(data.getReceivedDate().getTime()));
+            pstmt.setDate(3, received);
             pstmt.setString(4, from);
             pstmt.setString(5, to);
-            pstmt.setString(6, data.getHeader("Message-ID")[0]);
+            pstmt.setString(6, msgid);
 
             pstmt.executeUpdate();
         }
