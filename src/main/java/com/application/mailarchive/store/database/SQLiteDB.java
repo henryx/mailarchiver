@@ -50,8 +50,8 @@ public class SQLiteDB extends Database {
         String[] tables;
 
         tables = new String[]{
-            "CREATE TABLE headers(account, folder, received, fromaddr, toaddr, msgid)",
-            "CREATE VIRTUAL TABLE messages USING FTS5(msgid, body)"
+                "CREATE TABLE headers(account, folder, received, fromaddr, toaddr, msgid)",
+                "CREATE VIRTUAL TABLE messages USING FTS5(msgid, body)"
         };
 
         try (Statement stmt = this.getConn().createStatement();) {
@@ -61,10 +61,10 @@ public class SQLiteDB extends Database {
         }
     }
 
-    private void archiveHeaders(String account, String folder, Message data) throws SQLException, MessagingException {
+        private void archiveHeaders(String account, String folder, Message data) throws SQLException, MessagingException {
         String query, from, to, msgid;
         Date received;
-        
+
         query = "INSERT INTO headers VALUES(?, ?, ?, ?, ?, ?)";
         from = MailUtils.getRecipient(data.getFrom());
         to = MailUtils.getRecipient(data.getRecipients(Message.RecipientType.TO));
@@ -114,13 +114,16 @@ public class SQLiteDB extends Database {
 
     @Override
     public void archive(String account, String folder, Message data) throws MessagingException, IOException {
+        String msgid;
+
+        msgid = data.getHeader("Message-ID")[0];
         try {
-            if (!this.headerExists(account, folder, data.getHeader("Message-ID")[0])) {
+            if (!this.headerExists(account, folder, msgid)) {
                 this.archiveHeaders(account, folder, data);
             }
 
-            if (!this.messageExists(data.getHeader("Message-ID")[0])) {
-                this.archiveMessage(data.getHeader("Message-ID")[0], MailUtils.getBodyPart(data));
+            if (!this.messageExists(msgid)) {
+                this.archiveMessage(msgid, MailUtils.getBodyPart(data));
             }
         } catch (SQLException ex) {
             Main.logger.debug("Failed to archive message: " + ex.getMessage());
