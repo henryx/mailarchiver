@@ -17,6 +17,7 @@ import org.ini4j.Wini;
 import javax.mail.MessagingException;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.security.GeneralSecurityException;
 
@@ -39,9 +40,12 @@ public class Main {
         try {
             result = new Wini();
             result.load(new FileInputStream(cfgFile));
-        } catch (IOException ex) {
+        } catch (FileNotFoundException ex) {
             ex.printStackTrace();
             System.exit(2);
+        } catch (IOException ex) {
+            ex.printStackTrace();
+            System.exit(3);
         }
 
         return result;
