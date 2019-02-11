@@ -51,7 +51,7 @@ public class SQLiteDB extends Database {
 
         tables = new String[]{
                 "CREATE TABLE headers(account, folder, received, fromaddr, toaddr, msgid)",
-                "CREATE VIRTUAL TABLE messages USING FTS5(msgid, body)"
+                "CREATE VIRTUAL TABLE messages USING FTS5(account, folder, msgid, body)"
         };
 
         try (Statement stmt = this.getConn().createStatement();) {
@@ -82,13 +82,15 @@ public class SQLiteDB extends Database {
         }
     }
 
-    private void archiveMessage(String msgid, String body) throws SQLException {
+    private void archiveMessage(String account, String folder, String msgid, String body) throws SQLException {
         String query;
 
-        query = "INSERT INTO messages VALUES(?, ?)";
+        query = "INSERT INTO messages VALUES(?, ?, ?, ?)";
         try (PreparedStatement pstmt = this.getConn().prepareStatement(query)) {
-            pstmt.setString(1, msgid);
-            pstmt.setString(2, body);
+            pstmt.setString(1, account);
+            pstmt.setString(2, folder);
+            pstmt.setString(3, msgid);
+            pstmt.setString(4, body);
 
             pstmt.executeUpdate();
         }
@@ -122,7 +124,7 @@ public class SQLiteDB extends Database {
             }
 
             if (!this.messageExists(msgid)) {
-                this.archiveMessage(msgid, MailUtils.getBodyPart(data));
+                this.archiveMessage(account, folder, msgid, MailUtils.getBodyPart(data));
             }
         } catch (SQLException ex) {
             Main.logger.debug("Failed to archive message: " + ex.getMessage());
