@@ -50,7 +50,6 @@ public class SQLiteDB extends Database {
         String[] tables;
 
         tables = new String[]{
-            "PRAGMA journal_mode=WAL",
             "CREATE TABLE headers(account, folder, received, fromaddr, toaddr, msgid)",
             "CREATE VIRTUAL TABLE messages USING FTS5(msgid, body)"
         };
@@ -103,7 +102,7 @@ public class SQLiteDB extends Database {
         dbpath = this.getCfg().get("general", "database");
 
         try {
-            this.setConn(DriverManager.getConnection("jdbc:sqlite:" + dbpath));
+            this.setConn(DriverManager.getConnection(String.format("jdbc:sqlite:%s?journal_mode=WAL", dbpath)));
             if (!this.checkDB()) {
                 this.initDB();
             }
