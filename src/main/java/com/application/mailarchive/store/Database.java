@@ -136,7 +136,7 @@ public abstract class Database implements Store {
         String msgid, query;
         int count;
 
-        query = "SELECT Count(*) FROM messages WHERE msgid = ?";
+        query = "SELECT Count(*) FROM messages WHERE account = ? AND folder = ? AND msgid = ?";
 
         try {
             msgid = data.getHeader("Message-ID")[0];
@@ -145,7 +145,9 @@ public abstract class Database implements Store {
         }
 
         try (PreparedStatement pstmt = this.getConn().prepareStatement(query)) {
-            pstmt.setString(1, msgid);
+            pstmt.setString(1, account);
+            pstmt.setString(2, folder);
+            pstmt.setString(3, msgid);
 
             res = pstmt.executeQuery();
             res.next();
