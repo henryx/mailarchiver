@@ -51,7 +51,7 @@ public class SQLiteDB extends Database {
 
         tables = new String[]{
                 "CREATE TABLE headers(account, folder, mail, received, fromaddr, toaddr, msgid, subj)",
-                "CREATE VIRTUAL TABLE messages USING FTS5(account, folder, nail, msgid, body)"
+                "CREATE VIRTUAL TABLE messages USING FTS5(account, folder, mail, msgid, body)"
         };
 
         try (Statement stmt = this.getConn().createStatement()) {
