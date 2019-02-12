@@ -50,11 +50,11 @@ public class SQLiteDB extends Database {
         String[] tables;
 
         tables = new String[]{
-                "CREATE TABLE headers(account, folder, received, fromaddr, toaddr, msgid, subj)",
-                "CREATE VIRTUAL TABLE messages USING FTS5(account, folder, msgid, body)"
+                "CREATE TABLE headers(account, folder, mail, received, fromaddr, toaddr, msgid, subj)",
+                "CREATE VIRTUAL TABLE messages USING FTS5(account, folder, nail, msgid, body)"
         };
 
-        try (Statement stmt = this.getConn().createStatement();) {
+        try (Statement stmt = this.getConn().createStatement()) {
             for (String table : tables) {
                 stmt.execute(table);
             }
@@ -62,10 +62,13 @@ public class SQLiteDB extends Database {
     }
 
     private void archiveHeaders(String account, String folder, String msgid, Message data) throws SQLException, MessagingException {
+        Integer mail;
         String query, from, to, subject;
         Timestamp received;
 
-        query = "INSERT INTO headers VALUES(?, ?, ?, ?, ?, ?, ?)";
+        query = "INSERT INTO headers VALUES(?, ?, ?, ?, ?, ?, ?, ?)";
+
+        mail = data.getMessageNumber();
         from = MailUtils.getRecipient(data.getFrom());
         to = MailUtils.getRecipient(data.getRecipients(Message.RecipientType.TO));
         received = new Timestamp(data.getReceivedDate().getTime());
@@ -74,25 +77,27 @@ public class SQLiteDB extends Database {
         try (PreparedStatement pstmt = this.getConn().prepareStatement(query)) {
             pstmt.setString(1, account);
             pstmt.setString(2, folder);
-            pstmt.setTimestamp(3, received);
-            pstmt.setString(4, from);
-            pstmt.setString(5, to);
-            pstmt.setString(6, msgid);
-            pstmt.setString(7, subject);
+            pstmt.setInt(3, mail);
+            pstmt.setTimestamp(4, received);
+            pstmt.setString(5, from);
+            pstmt.setString(6, to);
+            pstmt.setString(7, msgid);
+            pstmt.setString(8, subject);
 
             pstmt.executeUpdate();
         }
     }
 
-    private void archiveMessage(String account, String folder, String msgid, String body) throws SQLException {
+    private void archiveMessage(String account, String folder, Integer mail, String msgid, String body) throws SQLException {
         String query;
 
-        query = "INSERT INTO messages VALUES(?, ?, ?, ?)";
+        query = "INSERT INTO messages VALUES(?, ?, ?, ?, ?)";
         try (PreparedStatement pstmt = this.getConn().prepareStatement(query)) {
             pstmt.setString(1, account);
             pstmt.setString(2, folder);
-            pstmt.setString(3, msgid);
-            pstmt.setString(4, body);
+            pstmt.setInt(3, mail);
+            pstmt.setString(4, msgid);
+            pstmt.setString(5, body);
 
             pstmt.executeUpdate();
         }
@@ -131,7 +136,7 @@ public class SQLiteDB extends Database {
             }
 
             if (!this.messageExists(msgid)) {
-                this.archiveMessage(account, folder, msgid, MailUtils.getBodyPart(data));
+                this.archiveMessage(account, folder, data.getMessageNumber(), msgid, MailUtils.getBodyPart(data));
             }
         } catch (SQLException ex) {
             Main.logger.debug("Failed to archive message: " + ex.getMessage());
