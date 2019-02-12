@@ -119,7 +119,12 @@ public class SQLiteDB extends Database {
     public void archive(String account, String folder, Message data) throws MessagingException, IOException {
         String msgid;
 
-        msgid = data.getHeader("Message-ID")[0];
+        try {
+            msgid = data.getHeader("Message-ID")[0];
+        } catch (NullPointerException ex) {
+            msgid = "";
+        }
+
         try {
             if (!this.headerExists(account, folder, msgid)) {
                 this.archiveHeaders(account, folder, msgid, data);
