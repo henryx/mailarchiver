@@ -66,7 +66,7 @@ public class SQLiteDB extends Database {
         String query, from, to, msgid, subject;
         Timestamp received;
 
-        query = "INSERT INTO headers VALUES(?, ?, ?, ?, ?, ?, ?)";
+        query = "INSERT INTO headers VALUES(?, ?, ?, ?, ?, ?, ?, ?)";
 
         mail = data.getMessageNumber();
         from = MailUtils.getRecipient(data.getFrom());
