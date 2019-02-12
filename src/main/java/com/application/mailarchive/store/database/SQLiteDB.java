@@ -88,10 +88,15 @@ public class SQLiteDB extends Database {
         }
     }
 
-    private void archiveMessage(String account, String folder, Integer mail, String msgid, String body) throws SQLException {
+    private void archiveMessage(String account, String folder, String msgid, Message data) throws SQLException, IOException, MessagingException {
+        Integer mail;
         String query;
+        String body;
 
         query = "INSERT INTO messages VALUES(?, ?, ?, ?, ?)";
+        mail = data.getMessageNumber();
+        body = MailUtils.getBodyPart(data);
+
         try (PreparedStatement pstmt = this.getConn().prepareStatement(query)) {
             pstmt.setString(1, account);
             pstmt.setString(2, folder);
@@ -136,7 +141,7 @@ public class SQLiteDB extends Database {
             }
 
             if (!this.messageExists(msgid)) {
-                this.archiveMessage(account, folder, data.getMessageNumber(), msgid, MailUtils.getBodyPart(data));
+                this.archiveMessage(account, folder, msgid, data);
             }
         } catch (SQLException ex) {
             Main.logger.debug("Failed to archive message: " + ex.getMessage());
