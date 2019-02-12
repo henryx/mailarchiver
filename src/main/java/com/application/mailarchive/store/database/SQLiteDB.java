@@ -50,7 +50,7 @@ public class SQLiteDB extends Database {
         String[] tables;
 
         tables = new String[]{
-                "CREATE TABLE headers(account, folder, received, fromaddr, toaddr, msgid)",
+                "CREATE TABLE headers(account, folder, received, fromaddr, toaddr, msgid, subj)",
                 "CREATE VIRTUAL TABLE messages USING FTS5(account, folder, msgid, body)"
         };
 
@@ -62,13 +62,14 @@ public class SQLiteDB extends Database {
     }
 
     private void archiveHeaders(String account, String folder, String msgid, Message data) throws SQLException, MessagingException {
-        String query, from, to;
+        String query, from, to, subject;
         Timestamp received;
 
-        query = "INSERT INTO headers VALUES(?, ?, ?, ?, ?, ?)";
+        query = "INSERT INTO headers VALUES(?, ?, ?, ?, ?, ?, ?)";
         from = MailUtils.getRecipient(data.getFrom());
         to = MailUtils.getRecipient(data.getRecipients(Message.RecipientType.TO));
         received = new Timestamp(data.getReceivedDate().getTime());
+        subject = data.getSubject();
 
         try (PreparedStatement pstmt = this.getConn().prepareStatement(query)) {
             pstmt.setString(1, account);
@@ -77,6 +78,7 @@ public class SQLiteDB extends Database {
             pstmt.setString(4, from);
             pstmt.setString(5, to);
             pstmt.setString(6, msgid);
+            pstmt.setString(7, subject);
 
             pstmt.executeUpdate();
         }
