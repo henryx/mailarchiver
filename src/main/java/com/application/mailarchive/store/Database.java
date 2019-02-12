@@ -131,12 +131,19 @@ public abstract class Database implements Store {
     }
 
     @Override
-    public boolean messageExists(String msgid) {
+    public boolean messageExists(String account, String folder, Message data) {
         ResultSet res;
-        String query;
+        String msgid, query;
         int count;
 
         query = "SELECT Count(*) FROM messages WHERE msgid = ?";
+
+        try {
+            msgid = data.getHeader("Message-ID")[0];
+        } catch (MessagingException | NullPointerException ex) {
+            msgid = "";
+        }
+
         try (PreparedStatement pstmt = this.getConn().prepareStatement(query)) {
             pstmt.setString(1, msgid);
 

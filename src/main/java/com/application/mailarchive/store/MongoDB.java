@@ -53,7 +53,7 @@ public class MongoDB implements Store {
     }
 
     @Override
-    public boolean messageExists(String msgid) {
+    public boolean messageExists(String account, String folder, Message data) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 

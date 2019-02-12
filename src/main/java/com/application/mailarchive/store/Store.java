@@ -30,5 +30,5 @@ public interface Store extends AutoCloseable {
 
     public boolean headerExists(String account, String folder, Message data);
 
-    public boolean messageExists(String msgid);
+    public boolean messageExists(String account, String folder, Message data);
 }

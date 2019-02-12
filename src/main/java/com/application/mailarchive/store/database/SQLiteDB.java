@@ -140,7 +140,7 @@ public class SQLiteDB extends Database {
                 this.archiveHeaders(account, folder, msgid, data);
             }
 
-            if (!this.messageExists(msgid)) {
+            if (!this.messageExists(account, folder, data)) {
                 this.archiveMessage(account, folder, msgid, data);
             }
         } catch (SQLException ex) {
