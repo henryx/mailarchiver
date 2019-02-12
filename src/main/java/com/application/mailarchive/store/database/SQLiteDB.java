@@ -136,7 +136,7 @@ public class SQLiteDB extends Database {
         }
 
         try {
-            if (!this.headerExists(account, folder, msgid)) {
+            if (!this.headerExists(account, folder, data)) {
                 this.archiveHeaders(account, folder, msgid, data);
             }
 

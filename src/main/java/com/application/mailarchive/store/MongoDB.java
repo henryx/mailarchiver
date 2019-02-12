@@ -9,6 +9,7 @@ package com.application.mailarchive.store;
 import java.io.IOException;
 import javax.mail.Message;
 import javax.mail.MessagingException;
+
 import org.ini4j.Wini;
 
 /**
@@ -47,7 +48,7 @@ public class MongoDB implements Store {
     }
 
     @Override
-    public boolean headerExists(String account, String folder, String msgid) {
+    public boolean headerExists(String account, String folder, Message data) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 

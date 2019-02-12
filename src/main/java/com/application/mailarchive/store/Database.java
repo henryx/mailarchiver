@@ -7,6 +7,7 @@
 package com.application.mailarchive.store;
 
 import com.application.mailarchive.Main;
+
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -99,12 +100,19 @@ public abstract class Database implements Store {
     public abstract void archive(String account, String folder, Message data) throws MessagingException, IOException;
 
     @Override
-    public boolean headerExists(String account, String folder, String msgid) {
+    public boolean headerExists(String account, String folder, Message data) {
         ResultSet res;
-        String query;
+        String msgid, query;
         int count;
 
         query = "SELECT Count(*) FROM headers WHERE account = ? AND folder = ? AND msgid = ?";
+
+        try {
+            msgid = data.getHeader("Message-ID")[0];
+        } catch (MessagingException | NullPointerException ex) {
+            msgid = "";
+        }
+
         try (PreparedStatement pstmt = this.getConn().prepareStatement(query)) {
             pstmt.setString(1, account);
             pstmt.setString(2, folder);

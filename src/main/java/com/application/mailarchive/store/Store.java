@@ -28,7 +28,7 @@ public interface Store extends AutoCloseable {
     
     public void archive(String account, String folder, Message data) throws MessagingException, IOException;
 
-    public boolean headerExists(String account, String folder, String msgid);
+    public boolean headerExists(String account, String folder, Message data);
 
     public boolean messageExists(String msgid);
 }
