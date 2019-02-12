@@ -61,18 +61,24 @@ public class SQLiteDB extends Database {
         }
     }
 
-    private void archiveHeaders(String account, String folder, String msgid, Message data) throws SQLException, MessagingException {
+    private void archiveHeaders(String account, String folder, Message data) throws SQLException, MessagingException {
         Integer mail;
-        String query, from, to, subject;
+        String query, from, to, msgid, subject;
         Timestamp received;
 
-        query = "INSERT INTO headers VALUES(?, ?, ?, ?, ?, ?, ?, ?)";
+        query = "INSERT INTO headers VALUES(?, ?, ?, ?, ?, ?, ?)";
 
         mail = data.getMessageNumber();
         from = MailUtils.getRecipient(data.getFrom());
         to = MailUtils.getRecipient(data.getRecipients(Message.RecipientType.TO));
         received = new Timestamp(data.getReceivedDate().getTime());
         subject = data.getSubject();
+
+        try {
+            msgid = data.getHeader("Message-ID")[0];
+        } catch (NullPointerException ex) {
+            msgid = "";
+        }
 
         try (PreparedStatement pstmt = this.getConn().prepareStatement(query)) {
             pstmt.setString(1, account);
@@ -88,14 +94,21 @@ public class SQLiteDB extends Database {
         }
     }
 
-    private void archiveMessage(String account, String folder, String msgid, Message data) throws SQLException, IOException, MessagingException {
+    private void archiveMessage(String account, String folder, Message data) throws SQLException, IOException, MessagingException {
         Integer mail;
-        String query;
         String body;
+        String msgid;
+        String query;
 
         query = "INSERT INTO messages VALUES(?, ?, ?, ?, ?)";
         mail = data.getMessageNumber();
         body = MailUtils.getBodyPart(data);
+
+        try {
+            msgid = data.getHeader("Message-ID")[0];
+        } catch (NullPointerException ex) {
+            msgid = "";
+        }
 
         try (PreparedStatement pstmt = this.getConn().prepareStatement(query)) {
             pstmt.setString(1, account);
@@ -127,21 +140,13 @@ public class SQLiteDB extends Database {
 
     @Override
     public void archive(String account, String folder, Message data) throws MessagingException, IOException {
-        String msgid;
-
-        try {
-            msgid = data.getHeader("Message-ID")[0];
-        } catch (NullPointerException ex) {
-            msgid = "";
-        }
-
         try {
             if (!this.headerExists(account, folder, data)) {
-                this.archiveHeaders(account, folder, msgid, data);
+                this.archiveHeaders(account, folder, data);
             }
 
             if (!this.messageExists(account, folder, data)) {
-                this.archiveMessage(account, folder, msgid, data);
+                this.archiveMessage(account, folder, data);
             }
         } catch (SQLException ex) {
             Main.logger.debug("Failed to archive message: " + ex.getMessage());
