@@ -102,21 +102,16 @@ public abstract class Database implements Store {
     @Override
     public boolean headerExists(String account, String folder, Message data) {
         ResultSet res;
-        String msgid, query;
-        int count;
+        String query;
+        int mail, count;
 
-        query = "SELECT Count(*) FROM headers WHERE account = ? AND folder = ? AND msgid = ?";
-
-        try {
-            msgid = data.getHeader("Message-ID")[0];
-        } catch (MessagingException | NullPointerException ex) {
-            msgid = "";
-        }
+        query = "SELECT Count(*) FROM headers WHERE account = ? AND folder = ? AND mail = ?";
+        mail = data.getMessageNumber();
 
         try (PreparedStatement pstmt = this.getConn().prepareStatement(query)) {
             pstmt.setString(1, account);
             pstmt.setString(2, folder);
-            pstmt.setString(3, msgid);
+            pstmt.setInt(3, mail);
 
             res = pstmt.executeQuery();
             res.next();
@@ -133,21 +128,17 @@ public abstract class Database implements Store {
     @Override
     public boolean messageExists(String account, String folder, Message data) {
         ResultSet res;
-        String msgid, query;
-        int count;
+        String query;
+        int mail, count;
 
-        query = "SELECT Count(*) FROM messages WHERE account = ? AND folder = ? AND msgid = ?";
+        query = "SELECT Count(*) FROM messages WHERE account = ? AND folder = ? AND mail = ?";
 
-        try {
-            msgid = data.getHeader("Message-ID")[0];
-        } catch (MessagingException | NullPointerException ex) {
-            msgid = "";
-        }
+        mail = data.getMessageNumber();
 
         try (PreparedStatement pstmt = this.getConn().prepareStatement(query)) {
             pstmt.setString(1, account);
             pstmt.setString(2, folder);
-            pstmt.setString(3, msgid);
+            pstmt.setInt(3, mail);
 
             res = pstmt.executeQuery();
             res.next();
